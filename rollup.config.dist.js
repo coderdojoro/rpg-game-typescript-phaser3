@@ -2,6 +2,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import { uglify } from 'rollup-plugin-uglify';
+import serve from 'rollup-plugin-serve';
 import typescript from 'rollup-plugin-typescript2';
 
 const PORT = process.env.PORT || 3000;
