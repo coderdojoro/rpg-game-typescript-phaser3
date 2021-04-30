@@ -5,7 +5,7 @@ import { uglify } from 'rollup-plugin-uglify';
 import serve from 'rollup-plugin-serve';
 import typescript from 'rollup-plugin-typescript2';
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const HOST = process.env.HEROKU_APP_NAME ? process.env.HEROKU_APP_NAME + '.herokuapp.com' : 'localhost';
 
 export default {
@@ -31,6 +31,7 @@ export default {
 
         //  Toggle the booleans here to enable / disable Phaser 3 features:
         replace({
+            preventAssignment: true,
             'typeof CANVAS_RENDERER': JSON.stringify(true),
             'typeof WEBGL_RENDERER': JSON.stringify(true),
             'typeof EXPERIMENTAL': JSON.stringify(true),
@@ -67,7 +68,7 @@ export default {
 
         //  See https://www.npmjs.com/package/rollup-plugin-serve for config options
         serve({
-            open: true,
+            open: false,
             contentBase: 'dist',
             host: HOST,
             port: PORT,
