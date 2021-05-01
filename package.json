@@ -7,6 +7,7 @@
         "start": "rollup --watch --config rollup.config.dev.js",
         "dev": "rollup --config rollup.config.dev.js",
         "build": "rollup --config rollup.config.dist.js",
+        "heroku-postbuild": "rollup --config rollup.config.dist.js",
         "dev-watch": "rollup --watch --config rollup.config.dev.js"
     },
     "repository": {
