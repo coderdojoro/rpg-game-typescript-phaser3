@@ -2,11 +2,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import { uglify } from 'rollup-plugin-uglify';
-import serve from 'rollup-plugin-serve';
 import typescript from 'rollup-plugin-typescript2';
-
-const PORT = process.env.PORT || 8080;
-const HOST = process.env.HEROKU_APP_NAME ? process.env.HEROKU_APP_NAME + '.herokuapp.com' : 'localhost';
 
 export default {
 
@@ -64,18 +60,6 @@ export default {
         //  See https://www.npmjs.com/package/rollup-plugin-uglify for config options
         uglify({
             mangle: false
-        }),
-
-        //  See https://www.npmjs.com/package/rollup-plugin-serve for config options
-        serve({
-            open: false,
-            contentBase: 'dist',
-            host: HOST,
-            port: PORT,
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            }
         })
-
     ]
 };

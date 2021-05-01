@@ -6,9 +6,9 @@
     "scripts": {
         "start": "rollup --watch --config rollup.config.dev.js",
         "dev": "rollup --config rollup.config.dev.js",
+        "dev-watch": "rollup --watch --config rollup.config.dev.js",
         "build": "rollup --config rollup.config.dist.js",
-        "heroku-postbuild": "rollup --config rollup.config.dist.js",
-        "dev-watch": "rollup --watch --config rollup.config.dev.js"
+        "start-prod": "node app.js"
     },
     "repository": {
         "type": "git",
@@ -20,7 +20,9 @@
         "url": "https://github.com/photonstorm/phaser3-typescript-project-template/issues"
     },
     "homepage": "https://github.com/photonstorm/phaser3-typescript-project-template#readme",
-    "dependencies": {},
+    "dependencies": {
+        "node-static": "^0.7.11"
+    },
     "devDependencies": {
         "@rollup/plugin-replace": "^2.4.2",
         "phaser": "^3.54.0",
