@@ -8,7 +8,7 @@
         "dev": "rollup --config rollup.config.dev.js",
         "dev-watch": "rollup --watch --config rollup.config.dev.js",
         "build": "rollup --config rollup.config.dist.js",
-        "start-prod": "node app.js"
+        "start-prod": "node httpServer.js"
     },
     "repository": {
         "type": "git",
@@ -28,6 +28,8 @@
         "phaser": "^3.54.0",
         "rollup": "^2.46.0",
         "rollup-plugin-commonjs": "^10.1.0",
+        "rollup-plugin-copy": "^3.4.0",
+        "rollup-plugin-livereload": "^1.0.4",
         "rollup-plugin-node-resolve": "^5.2.0",
         "rollup-plugin-serve": "^1.1.0",
         "rollup-plugin-typescript2": "^0.30.0",

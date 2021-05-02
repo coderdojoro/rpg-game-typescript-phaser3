@@ -3,12 +3,14 @@ import resolve from 'rollup-plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import serve from 'rollup-plugin-serve';
 import typescript from 'rollup-plugin-typescript2';
+import livereload from 'rollup-plugin-livereload';
+import copy from 'rollup-plugin-copy';
 
 export default {
 
     //  Our games entry point (edit as required)
     input: [
-        './src/game.ts'
+        './src/index.ts'
     ],
 
     //  Where the build file is to be generated.
@@ -66,7 +68,16 @@ export default {
             headers: {
                 'Access-Control-Allow-Origin': '*'
             }
-        })
+        }),
+
+        livereload('dist'),
+
+        copy({
+            targets: [
+              { src: 'src/index.html', dest: 'dist' },
+              { src: 'src/assets/**/*', dest: 'dist/assets' }
+            ]
+          })
 
     ]
 };
