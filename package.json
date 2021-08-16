@@ -41,7 +41,6 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@yandeu/prettier-config": "^0.0.2",
     "copy-webpack-plugin": "^9.0.1",
     "html-webpack-plugin": "^5.2.0",
     "javascript-obfuscator": "^2.9.5",
