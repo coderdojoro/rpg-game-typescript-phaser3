@@ -1,3 +1,6 @@
+import MainScene from './mainScene';
+import * as configs from './../game';
+
 export default class PreloadScene extends Phaser.Scene {
     constructor() {
         super({ key: 'PreloadScene' });
@@ -26,43 +29,6 @@ export default class PreloadScene extends Phaser.Scene {
         // else console.log('The mainScene class will not even be loaded by the browser')
 
         this.cameras.main.fadeIn();
-
-        //this.scale.resize(2024, 768);
-
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
-
-        let install = this.add.sprite(screenCenterX, 200, 'install').setInteractive();
-        install.setOrigin(1, 1);
-
-        let start = this.add.sprite(screenCenterX, 400, 'start').setInteractive();
-        start.setOrigin(1, 1);
-
-        install.on(Phaser.Input.Events.POINTER_OVER, () => {
-            install.setTexture('install-focus');
-        });
-        install.on(Phaser.Input.Events.POINTER_OUT, () => {
-            install.setTexture('install');
-        });
-        install.on(Phaser.Input.Events.POINTER_DOWN, () => {
-            install.setTexture('install');
-        });
-        install.on(Phaser.Input.Events.POINTER_UP, () => {
-            this.scene.start('MainScene');
-        });
-        const yt = this.textures.get('install');
-        yt.setFilter(Phaser.Textures.FilterMode.LINEAR);
-
-        start.on(Phaser.Input.Events.POINTER_OVER, () => {
-            start.setTexture('start-focus');
-        });
-        start.on(Phaser.Input.Events.POINTER_OUT, () => {
-            start.setTexture('start');
-        });
-        start.on(Phaser.Input.Events.POINTER_DOWN, () => {
-            this.scene.start('MainScene');
-        });
-
         // remove the loading screen
         let loadingScreen = document.getElementById('loading-screen');
         if (loadingScreen) {
@@ -75,5 +41,67 @@ export default class PreloadScene extends Phaser.Scene {
                 }
             });
         }
+
+        this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
+        this.scale.setGameSize(800, 600).getParentBounds();
+        this.scale.displaySize.resize(800, 600);
+        this.physics.world.setBounds(0, 0, 800, 600);
+
+        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+
+        let install = this.add.sprite(screenCenterX + 240 / 2, 200, 'install').setInteractive();
+        install.setOrigin(1, 1);
+
+        let start = this.add.sprite(screenCenterX + 240 / 2, 400, 'start').setInteractive();
+        start.setOrigin(1, 1);
+
+        install.on(Phaser.Input.Events.POINTER_OVER, () => {
+            install.setTexture('install-focus');
+        });
+        install.on(Phaser.Input.Events.POINTER_OUT, () => {
+            install.setTexture('install');
+        });
+        install.on(Phaser.Input.Events.POINTER_DOWN, () => {
+            install.setTexture('install');
+        });
+        install.on(Phaser.Input.Events.POINTER_UP, () => {
+            this.scene.add('MainScene', MainScene);
+
+            let htmlBody: HTMLElement | null = document.getElementById('htmlBody');
+            if (htmlBody) htmlBody.style.backgroundColor = configs.mainScene.backgroundColor;
+            htmlBody;
+            this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
+            this.scale.setGameSize(window.innerWidth, window.innerHeight).getParentBounds();
+            this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
+            this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
+
+            this.scene.start('MainScene', {
+                name: 'MainScene',
+                x: 0,
+                y: 0,
+                width: this.scene.systems.scale.width,
+                height: this.scene.systems.scale.height,
+                zoom: 1,
+                rotation: 0,
+                scrollX: 0,
+                scrollY: 0,
+                roundPixels: false,
+                visible: true,
+                backgroundColor: false,
+                bounds: null // {x, y, width, height}
+            });
+        });
+
+        start.on(Phaser.Input.Events.POINTER_OVER, () => {
+            start.setTexture('start-focus');
+        });
+        start.on(Phaser.Input.Events.POINTER_OUT, () => {
+            start.setTexture('start');
+        });
+        start.on(Phaser.Input.Events.POINTER_DOWN, () => {
+            this.scene.add('MainScene', MainScene);
+            this.scene.start('MainScene');
+        });
     }
 }

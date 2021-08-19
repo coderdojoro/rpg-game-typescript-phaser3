@@ -2,10 +2,11 @@ import 'phaser';
 import MainScene from './scenes/mainScene';
 import PreloadScene from './scenes/preloadScene';
 
-const DEFAULT_WIDTH = 1280;
-const DEFAULT_HEIGHT = 720;
+const DEFAULT_WIDTH = 500;
+const DEFAULT_HEIGHT = 500;
 
-const config = {
+//main scene - stratch
+export const mainScene = {
     type: Phaser.WEBGL,
     backgroundColor: '#008080',
     scale: {
@@ -18,7 +19,7 @@ const config = {
     render: {
         pixelArt: true
     },
-    scene: [PreloadScene, MainScene],
+    scene: [MainScene],
     physics: {
         default: 'arcade',
         arcade: {
@@ -31,6 +32,26 @@ const config = {
     }
 };
 
+//PreloadScene - Fixed
+export const preloadScene = {
+    type: Phaser.WEBGL,
+    backgroundColor: '#008080',
+    scale: {
+        parent: 'phaser-game',
+        mode: Phaser.Scale.NONE,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: 1024,
+        height: 768
+    },
+    render: {
+        pixelArt: false
+    },
+    scene: [PreloadScene],
+    physics: {
+        default: 'arcade'
+    }
+};
+
 window.addEventListener('load', () => {
-    const game = new Phaser.Game(config);
+    const game = new Phaser.Game(preloadScene);
 });
