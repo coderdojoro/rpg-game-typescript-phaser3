@@ -27,14 +27,6 @@ export default class PreloadScene extends Phaser.Scene {
 
         this.cameras.main.fadeIn();
 
-        let canvas = 1;
-        canvas = document.getElementById('phaser-game');
-
-        this.game.canvas.width = 1280;
-        this.game.canvas.height = 800;
-        canvas.style.width = canvas.style.height = '';
-        this.renderer.resize(1280, 800);
-
         //this.scale.resize(2024, 768);
 
         const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
@@ -47,7 +39,7 @@ export default class PreloadScene extends Phaser.Scene {
         start.setOrigin(1, 1);
 
         install.on(Phaser.Input.Events.POINTER_OVER, () => {
-            // install.setTexture('install-focus');
+            install.setTexture('install-focus');
         });
         install.on(Phaser.Input.Events.POINTER_OUT, () => {
             install.setTexture('install');
