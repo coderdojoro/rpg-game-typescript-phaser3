@@ -66,15 +66,18 @@ export default class PreloadScene extends Phaser.Scene {
             install.setTexture('install');
         });
         install.on(Phaser.Input.Events.POINTER_UP, () => {
-            this.scene.add('MainScene', MainScene);
-
             let htmlBody: HTMLElement | null = document.getElementById('htmlBody');
-            if (htmlBody) htmlBody.style.backgroundColor = configs.mainScene.backgroundColor;
-            htmlBody;
+            if (htmlBody) htmlBody.style.backgroundColor = configs.preloadScene.backgroundColor;
+
             this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
             this.scale.setGameSize(window.innerWidth, window.innerHeight).getParentBounds();
             this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
             this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
+
+            // this.game.scale.scaleMode = Phaser.Scale.NONE;
+            // this.game.scale.updateCenter();
+
+            // this.game.scale.pageAlignVertically = true;
 
             this.scene.start('MainScene', {
                 name: 'MainScene',
@@ -91,6 +94,33 @@ export default class PreloadScene extends Phaser.Scene {
                 backgroundColor: false,
                 bounds: null // {x, y, width, height}
             });
+
+            const mainSceneData = {
+                key: 'MainScene',
+                active: true,
+                visible: true,
+                pack: undefined,
+                cameras: {
+                    name: 'MainCamera',
+                    x: 0,
+                    y: 0,
+                    width: this.scene.systems.scale.width,
+                    height: this.scene.systems.scale.height,
+                    zoom: 1,
+                    rotation: 0,
+                    roundPixels: false,
+                    scrollX: 0,
+                    scrollY: 0,
+                    backgroundColor: '#ff0000',
+                    bounds: undefined
+                }
+            };
+
+            // this.scene.remove();
+            // this.scene.add('MainScene', mainSceneData, true);
+
+            // let scene: Phaser.Scenes.ScenePlugin = this.scene.start('mainScene');
+            this.scene.start('MainScene');
         });
 
         start.on(Phaser.Input.Events.POINTER_OVER, () => {
