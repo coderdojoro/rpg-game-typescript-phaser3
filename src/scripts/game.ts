@@ -4,6 +4,8 @@ import PreloadScene from './scenes/preloadScene';
 
 const DEFAULT_WIDTH = 500;
 const DEFAULT_HEIGHT = 500;
+export const preloadSceneBackground = '#008080';
+export const mainSceneBackground = '#ffffff';
 
 //PreloadScene - Fixed
 export const preloadScene = {

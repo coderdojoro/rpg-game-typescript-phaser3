@@ -14,21 +14,8 @@ export default class PreloadScene extends Phaser.Scene {
     }
 
     create() {
-        /**
-         * This is how you would dynamically import the mainScene class (with code splitting),
-         * add the mainScene to the Scene Manager
-         * and start the scene.
-         * The name of the chunk would be 'mainScene.chunk.js
-         * Find more about code splitting here: https://webpack.js.org/guides/code-splitting/
-         */
-        // let someCondition = true
-        // if (someCondition)
-        //   import(/* webpackChunkName: "mainScene" */ './mainScene').then(mainScene => {
-        //     this.scene.add('MainScene', mainScene.default, true)
-        //   })
-        // else console.log('The mainScene class will not even be loaded by the browser')
-
-        this.cameras.main.fadeIn();
+        console.log('Start preloadScreen');
+        this.cameras.main.fadeIn(1000, 0, 128, 128);
         // remove the loading screen
         let loadingScreen = document.getElementById('loading-screen');
         if (loadingScreen) {
@@ -67,59 +54,13 @@ export default class PreloadScene extends Phaser.Scene {
         });
         install.on(Phaser.Input.Events.POINTER_UP, () => {
             let htmlBody: HTMLElement | null = document.getElementById('htmlBody');
-            if (htmlBody) htmlBody.style.backgroundColor = configs.preloadScene.backgroundColor;
+            if (htmlBody) htmlBody.style.backgroundColor = configs.mainSceneBackground;
 
             this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
             this.scale.setGameSize(window.innerWidth, window.innerHeight).getParentBounds();
             this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
             this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
 
-            // this.game.scale.scaleMode = Phaser.Scale.NONE;
-            // this.game.scale.updateCenter();
-
-            // this.game.scale.pageAlignVertically = true;
-
-            this.scene.start('MainScene', {
-                name: 'MainScene',
-                x: 0,
-                y: 0,
-                width: this.scene.systems.scale.width,
-                height: this.scene.systems.scale.height,
-                zoom: 1,
-                rotation: 0,
-                scrollX: 0,
-                scrollY: 0,
-                roundPixels: false,
-                visible: true,
-                backgroundColor: false,
-                bounds: null // {x, y, width, height}
-            });
-
-            const mainSceneData = {
-                key: 'MainScene',
-                active: true,
-                visible: true,
-                pack: undefined,
-                cameras: {
-                    name: 'MainCamera',
-                    x: 0,
-                    y: 0,
-                    width: this.scene.systems.scale.width,
-                    height: this.scene.systems.scale.height,
-                    zoom: 1,
-                    rotation: 0,
-                    roundPixels: false,
-                    scrollX: 0,
-                    scrollY: 0,
-                    backgroundColor: '#ff0000',
-                    bounds: undefined
-                }
-            };
-
-            // this.scene.remove();
-            // this.scene.add('MainScene', mainSceneData, true);
-
-            // let scene: Phaser.Scenes.ScenePlugin = this.scene.start('mainScene');
             this.scene.start('MainScene');
         });
 

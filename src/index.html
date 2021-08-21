@@ -7,7 +7,7 @@
 
         <meta name="theme-color" content="#008080" />
 
-        <link rel="manifest" href="./manifest.json" />
+        <link rel="manifest" href="./manifest.webmanifest" />
 
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -38,7 +38,7 @@
                 height: 100%;
                 margin: 0;
                 padding: 0;
-                background-color: #00ff00;
+                background-color: #008080;
                 overflow: hidden;
             }
             #phaser-game {
@@ -54,7 +54,7 @@
                 justify-content: center;
                 align-items: center;
                 z-index: 1;
-                background-color: #25373c;
+                background-color: #008080;
                 user-select: none;
                 transition: opacity 1s ease-in-out;
             }
@@ -71,27 +71,13 @@
 
         <noscript>Please enable javascript to continue using this application.</noscript>
 
+        <!-- installs the serviceWorker -->
         <script>
-            // // Initialize deferredPrompt for use later to show browser install prompt.
-            // let deferredPrompt;
-
-            // window.addEventListener('beforeinstallprompt', (e) => {
-            //     // Prevent the mini-infobar from appearing on mobile
-            //     e.preventDefault();
-            //     // Stash the event so it can be triggered later.
-            //     deferredPrompt = e;
-            //     // Update UI notify the user they can install the PWA
-            //     showInstallPromotion();
-            //     // Optionally, send analytics event that PWA install promo was shown.
-            //     console.log(`'beforeinstallprompt' event was fired.`);
-            // });
-
-            // <!-- installs the serviceWorker -->
-            // if ('serviceWorker' in navigator) {
-            //     window.addEventListener('load', () => {
-            //         navigator.serviceWorker.register('./sw.js');
-            //     });
-            // }
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./sw.js');
+                });
+            }
         </script>
     </head>
     <body id="htmlBody">
