@@ -17,20 +17,6 @@ export default class MainScene extends Phaser.Scene {
     }
 
     create() {
-        this.cameras.main.fadeIn();
-        // remove the loading screen
-        let loadingScreen = document.getElementById('loading-screen');
-        if (loadingScreen) {
-            loadingScreen.classList.add('transparent');
-            this.time.addEvent({
-                delay: 1000,
-                callback: () => {
-                    // @ts-ignore
-                    loadingScreen.remove();
-                }
-            });
-        }
-
         this.cameras.main.fadeIn(2000);
         this.cameras.main.setBackgroundColor(configs.mainSceneBackground);
 

@@ -1,6 +1,8 @@
 import MainScene from './mainScene';
 import * as configs from './../game';
 
+declare var beforeinstallevent: any;
+
 export default class PreloadScene extends Phaser.Scene {
     constructor() {
         super({ key: 'PreloadScene' });
@@ -52,16 +54,10 @@ export default class PreloadScene extends Phaser.Scene {
         install.on(Phaser.Input.Events.POINTER_DOWN, () => {
             install.setTexture('install');
         });
+
         install.on(Phaser.Input.Events.POINTER_UP, () => {
-            let htmlBody: HTMLElement | null = document.getElementById('htmlBody');
-            if (htmlBody) htmlBody.style.backgroundColor = configs.mainSceneBackground;
-
-            this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
-            this.scale.setGameSize(window.innerWidth, window.innerHeight).getParentBounds();
-            this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
-            this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
-
-            this.scene.start('MainScene');
+            console.log('click install');
+            beforeinstallevent.prompt();
         });
 
         start.on(Phaser.Input.Events.POINTER_OVER, () => {
@@ -71,7 +67,13 @@ export default class PreloadScene extends Phaser.Scene {
             start.setTexture('start');
         });
         start.on(Phaser.Input.Events.POINTER_DOWN, () => {
-            this.scene.add('MainScene', MainScene);
+            let htmlBody: HTMLElement | null = document.getElementById('htmlBody');
+            if (htmlBody) htmlBody.style.backgroundColor = configs.mainSceneBackground;
+            this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
+            this.scale.setGameSize(window.innerWidth, window.innerHeight).getParentBounds();
+            this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
+            this.scale.scaleMode = Phaser.Scale.ScaleModes.FIT;
+            this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
             this.scene.start('MainScene');
         });
     }

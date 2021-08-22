@@ -73,6 +73,12 @@
 
         <!-- installs the serviceWorker -->
         <script>
+            var beforeinstallevent;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                beforeinstallevent = e;
+            });
+
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('./sw.js');
