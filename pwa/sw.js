@@ -7,6 +7,8 @@
  */
 import { precacheAndRoute } from 'workbox-precaching';
 
+console.log('~~~~ Running sw.js');
+
 // Use with precache injection
 precacheAndRoute(self.__WB_MANIFEST);
 
@@ -28,6 +30,8 @@ self.addEventListener('install', (evt) => {
                 '/assets/buttons/install-focus.png',
                 '/assets/buttons/start.png',
                 '/assets/buttons/start-focus.png',
+                '/assets/buttons/launch.png',
+                '/assets/buttons/launch-focus.png',
                 '/assets/img/coder-1.png',
                 '/assets/img/coder-2.png',
                 '/assets/img/fps.png',
@@ -39,17 +43,24 @@ self.addEventListener('install', (evt) => {
 });
 
 self.addEventListener('activate', (evt) => {
+    // 1
     console.log('activate...');
 });
 
 self.addEventListener('fetch', (evt) => {
     console.log('fetch...');
-    evt.respondWidth(
-        caches.match(evt.request).then((res) => {
-            if (res) {
-                return res;
-            }
-            return fetch(evt.request);
-        })
-    );
+    console.log('evt.respondWidth: ' + evt.respondWidth);
+    console.log(evt);
+    if (evt.respondWidth) {
+        evt.respondWidth(
+            caches.match(evt.request).then((res) => {
+                if (res) {
+                    console.log('... load from cache');
+                    return res;
+                }
+                console.log('... load from internet');
+                return fetch(evt.request);
+            })
+        );
+    }
 });

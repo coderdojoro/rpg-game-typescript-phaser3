@@ -20,5 +20,11 @@
     "orientation": "landscape",
     "scope": "./",
     "theme_color": "#008080",
-    "capture_links": "new-client"
+    "capture_links": "new-client",
+    "related_applications": [
+        {
+            "platform": "webapp",
+            "url": "https://phaser-rpg.herokuapp.com/"
+        }
+    ]
 }

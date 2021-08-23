@@ -76,14 +76,80 @@
             var beforeinstallevent;
             window.addEventListener('beforeinstallprompt', (e) => {
                 //e.preventDefault();
+                console.log('.... define before install');
                 beforeinstallevent = e;
             });
 
+            function runningStandalone() {
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    console.log('[PWA] app is running as standalone');
+                    return true;
+                }
+                console.log('[PWA] app is running in browser');
+                return false;
+            }
+
+            console.log('InstalledRelatedApps: ' + navigator.getInstalledRelatedApps());
+            navigator
+                .getInstalledRelatedApps()
+                .then((value) => {
+                    console.log('InstalledRelatedApps' + value);
+                    console.log(value);
+                })
+                .catch((err) => {
+                    console.log('InstalledRelatedApps' + err);
+                });
+
+            console.log('URL: ' + document.referrer);
             if ('serviceWorker' in navigator) {
+                // 2
+                console.log('.... register load event');
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./sw.js');
+                    navigator.serviceWorker.register('./sw.js').then((reg) => {
+                        const sw = reg.installing || reg.waiting || reg.active;
+                        console.log('sw is ' + sw);
+                        if (sw) {
+                            logSwState(sw.state);
+                            sw.addEventListener('statechange', function (e) {
+                                logSwState(e.target.state);
+                            });
+                        }
+                    });
                 });
             }
+
+            var serviceWorkerState = 'uninitiated';
+            function logSwState(swState) {
+                switch (swState) {
+                    case 'installing':
+                        serviceWorkerState = 'installing';
+                        break;
+                    case 'installed':
+                        serviceWorkerState = 'installed';
+                        break;
+                    case 'activating':
+                        serviceWorkerState = 'activating';
+                        break;
+                    case 'activated':
+                        serviceWorkerState = 'activated';
+                        break;
+                    case 'redundant':
+                        serviceWorkerState = 'redundant';
+                        break;
+                    default:
+                        serviceWorkerState = 'unknown';
+                }
+                console.log('[PWA] Service Worker state: ' + serviceWorkerState);
+            }
+
+            var appInstalled = false;
+            window.addEventListener('appinstalled', () => {
+                console.log('~~~ PWA was installed');
+                appInstalled = true;
+            });
+            window.addEventListener('activate', () => {
+                console.log('~~~ PWA activated');
+            });
         </script>
     </head>
     <body id="htmlBody">
