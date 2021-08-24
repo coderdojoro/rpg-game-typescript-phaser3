@@ -14,32 +14,32 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 self.addEventListener('install', (evt) => {
     console.log('PWA install...');
-    evt.waitUntil(
-        caches.open('static').then((cache) => {
-            // prettier-ignore
-            return cache.addAll([
-                '/favicon.ico',
-                '/index.html',
-                '/main.bundle.js',
-                '/manifest.webmanifest',
-                '/sw.js',
-                'vendors.bundle.js',
-                '/icons/icons-192.png',
-                '/icons/icons-512.png',
-                '/assets/buttons/install.png',
-                '/assets/buttons/install-focus.png',
-                '/assets/buttons/start.png',
-                '/assets/buttons/start-focus.png',
-                '/assets/buttons/launch.png',
-                '/assets/buttons/launch-focus.png',
-                '/assets/img/coder-1.png',
-                '/assets/img/coder-2.png',
-                '/assets/img/fps.png',
-                '/assets/img/phaser-dude.png',
-                '/assets/img/phaser-logo.png'
-            ]);
-        })
-    );
+    // evt.waitUntil(
+    //     caches.open('static').then((cache) => {
+    //         // prettier-ignore
+    //         return cache.addAll([
+    //             '/favicon.ico',
+    //             '/index.html',
+    //             '/main.bundle.js',
+    //             '/manifest.webmanifest',
+    //             '/sw.js',
+    //             'vendors.bundle.js',
+    //             '/icons/icons-192.png',
+    //             '/icons/icons-512.png',
+    //             '/assets/buttons/install.png',
+    //             '/assets/buttons/install-focus.png',
+    //             '/assets/buttons/start-browser.png',
+    //             '/assets/buttons/start-browser-focus.png',
+    //             '/assets/buttons/launch.png',
+    //             '/assets/buttons/launch-focus.png',
+    //             '/assets/img/coder-1.png',
+    //             '/assets/img/coder-2.png',
+    //             '/assets/img/fps.png',
+    //             '/assets/img/phaser-dude.png',
+    //             '/assets/img/phaser-logo.png'
+    //         ]);
+    //     })
+    // );
 });
 
 self.addEventListener('activate', (evt) => {

@@ -1,4 +1,3 @@
-import MainScene from './mainScene';
 import * as configs from './../game';
 
 declare var beforeinstallevent: any;
@@ -17,8 +16,8 @@ export default class PreloadScene extends Phaser.Scene {
     preload() {
         this.load.image('install', 'assets/buttons/install.png');
         this.load.image('install-focus', 'assets/buttons/install-focus.png');
-        this.load.image('start', 'assets/buttons/start.png');
-        this.load.image('start-focus', 'assets/buttons/start-focus.png');
+        this.load.image('start', 'assets/buttons/start-browser.png');
+        this.load.image('start-focus', 'assets/buttons/start-browser-focus.png');
         this.load.image('launch', 'assets/buttons/launch.png');
         this.load.image('launch-focus', 'assets/buttons/launch-focus.png');
     }
@@ -73,7 +72,7 @@ export default class PreloadScene extends Phaser.Scene {
         this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
         this.scale.scaleMode = Phaser.Scale.ScaleModes.FIT;
         this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
-        this.scene.start('MainScene');
+        this.scene.start('MainMenuScene');
     }
 
     update() {

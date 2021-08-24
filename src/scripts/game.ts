@@ -1,6 +1,7 @@
 import 'phaser';
-import MainScene from './scenes/mainScene';
+import GameScene from './scenes/gameScene';
 import PreloadScene from './scenes/preloadScene';
+import MainMenuScene from './scenes/mainMenuScene';
 
 const DEFAULT_WIDTH = 500;
 const DEFAULT_HEIGHT = 500;
@@ -8,7 +9,7 @@ export const preloadSceneBackground = '#008080';
 export const mainSceneBackground = '#ffffff';
 
 //PreloadScene - Fixed
-export const preloadScene = {
+export const phaserConfiguration = {
     type: Phaser.WEBGL,
     backgroundColor: '#008080',
     scale: {
@@ -21,7 +22,7 @@ export const preloadScene = {
     render: {
         pixelArt: false
     },
-    scene: [PreloadScene, MainScene],
+    scene: [PreloadScene, MainMenuScene, GameScene],
     physics: {
         default: 'arcade'
     }
@@ -56,5 +57,5 @@ export const preloadScene = {
 // };
 export let game: Phaser.Game;
 window.addEventListener('load', () => {
-    game = new Phaser.Game(preloadScene);
+    game = new Phaser.Game(phaserConfiguration);
 });
