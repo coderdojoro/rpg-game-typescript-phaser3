@@ -27,11 +27,12 @@
         <style>
             html,
             #phaser-game {
-                margin: auto;
+                margin: auto; //0
                 top: 0;
                 bottom: 0;
                 left: 0;
                 right: 0;
+                //height: 100%;
             }
             body {
                 width: 100%;
@@ -43,8 +44,12 @@
             }
             #phaser-game {
                 position: fixed;
-                top: 0;
-                left: 0;
+                //position: absolute;
+                top: 0px;
+                //right: 0px;
+                //bottom: 0px;
+                left: 0px;
+                //height: 100vh;
             }
             #loading-screen {
                 position: fixed;
@@ -66,6 +71,14 @@
                 font-weight: bolder;
                 font-size: 28px;
                 color: #ffffff;
+            }
+            //canvas {
+            //    display: block;
+            //    margin: 0;
+            //    position: absolute;
+            //    top: 0;
+            //    left: 0;
+            //    /* transform: translate(-50%, -50%); */
             }
         </style>
 
@@ -102,27 +115,16 @@
 
             console.log('URL: ' + document.referrer);
             if ('serviceWorker' in navigator) {
-                // 2
                 console.log('.... register load event');
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./sw.js').then((reg) => {
-                        const sw = reg.installing || reg.waiting || reg.active;
-                        console.log('sw is ' + sw);
-                        if (sw) {
-                            logSwState(sw.state);
-                            sw.addEventListener('statechange', function (e) {
-                                logSwState(e.target.state);
-                            });
-                        }
-                    });
+                    navigator.serviceWorker.register('./sw.js').then((reg) => {});
                 });
-            }
 
             var serviceWorkerState = 'uninitiated';
             function logSwState(swState) {
                 switch (swState) {
                     case 'installing':
-                        serviceWorkerState = 'installing';
+                            serviceWorkerState = 'installing';
                         break;
                     case 'installed':
                         serviceWorkerState = 'installed';

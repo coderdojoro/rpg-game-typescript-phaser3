@@ -3,12 +3,14 @@ import GameScene from './scenes/gameScene';
 import PreloadScene from './scenes/preloadScene';
 import MainMenuScene from './scenes/mainMenuScene';
 
-const DEFAULT_WIDTH = 500;
-const DEFAULT_HEIGHT = 500;
-export const preloadSceneBackground = '#008080';
+const DEFAULT_WIDTH = 1024;
+const DEFAULT_HEIGHT = 768;
+export const preloadSceneBackground = '#ffffff';
 export const mainSceneBackground = '#ffffff';
 
-//PreloadScene - Fixed
+let width = window.innerWidth * window.devicePixelRatio;
+let height = window.innerHeight * window.devicePixelRatio;
+
 export const phaserConfiguration = {
     type: Phaser.WEBGL,
     backgroundColor: '#008080',
@@ -16,11 +18,11 @@ export const phaserConfiguration = {
         parent: 'phaser-game',
         mode: Phaser.Scale.NONE,
         autoCenter: Phaser.Scale.CENTER_BOTH,
-        width: 1024,
-        height: 768
+        width: width, //DEFAULT_WIDTH
+        height: height //DEFAULT_HEIGHT
     },
     render: {
-        pixelArt: false
+        pixelArt: true
     },
     scene: [PreloadScene, MainMenuScene, GameScene],
     physics: {
@@ -28,33 +30,6 @@ export const phaserConfiguration = {
     }
 };
 
-// //main scene - stratch
-// export const mainScene = {
-//     key: 'MainScene',
-//     type: Phaser.WEBGL,
-//     backgroundColor: '#ff0000',
-//     scale: {
-//         parent: 'phaser-game',
-//         mode: Phaser.Scale.FIT,
-//         autoCenter: Phaser.Scale.CENTER_BOTH,
-//         width: DEFAULT_WIDTH,
-//         height: DEFAULT_HEIGHT
-//     },
-//     render: {
-//         pixelArt: true
-//     },
-//     scene: [MainScene],
-//     physics: {
-//         default: 'arcade',
-//         arcade: {
-//             gravity: { y: 400 },
-//             debug: false,
-//             debugShowVelocity: true,
-//             debugShowBody: true,
-//             debugShowStaticBody: true
-//         }
-//     }
-// };
 export let game: Phaser.Game;
 window.addEventListener('load', () => {
     game = new Phaser.Game(phaserConfiguration);

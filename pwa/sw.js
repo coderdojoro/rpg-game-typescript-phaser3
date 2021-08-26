@@ -43,7 +43,6 @@ self.addEventListener('install', (evt) => {
 });
 
 self.addEventListener('activate', (evt) => {
-    // 1
     console.log('activate...');
 });
 
@@ -54,10 +53,10 @@ self.addEventListener('fetch', (evt) => {
     if (evt.respondWidth) {
         evt.respondWidth(
             caches.match(evt.request).then((res) => {
-                if (res) {
-                    console.log('... load from cache');
-                    return res;
-                }
+                // if (res) {
+                //     console.log('... load from cache');
+                //     return res;
+                // }
                 console.log('... load from internet');
                 return fetch(evt.request);
             })
