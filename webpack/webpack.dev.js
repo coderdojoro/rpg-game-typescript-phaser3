@@ -3,7 +3,7 @@ const common = require('./webpack.common');
 
 const dev = {
     mode: 'development',
-    devtool: 'eval',
+    devtool: 'eval-cheap-module-source-map',
     devServer: {
         open: true,
         port: 8000

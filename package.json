@@ -8,7 +8,7 @@
         "start": "webpack serve --config webpack/webpack.dev.js",
         "build": "rimraf dist && webpack --config webpack/webpack.prod.js",
         "bundle": "npm run build",
-        "serve": "npx serve -l $PORT dist",
+        "serve": "chmod 755 'build-server.sh' && ./run-serve.sh",
         "format": "prettier --check src/scripts/**",
         "format:write": "prettier --write src/scripts/**"
     },
@@ -35,8 +35,7 @@
         "author": "Yannick Deubel (https://github.com/yandeu)"
     },
     "engines": {
-        "//": "\"node\": \">=12\"",
-        "node": "14.x",
+        "node": ">14.x",
         "npm": "6.x"
     },
     "license": "MIT",

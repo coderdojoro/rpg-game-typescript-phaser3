@@ -30,7 +30,7 @@ export const phaserConfiguration = {
     }
 };
 
-export let game: Phaser.Game;
-window.addEventListener('load', () => {
-    game = new Phaser.Game(phaserConfiguration);
-});
+// export let game: Phaser.Game;
+// window.addEventListener('load', () => {
+//     game = new Phaser.Game(phaserConfiguration);
+// });
