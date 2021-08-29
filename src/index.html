@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
+        <!--incompatible properties maximum-scale, minimum-scale, user-scalable-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
@@ -15,12 +16,19 @@
         <meta name="apple-mobile-web-app-title" content="<%= htmlWebpackPlugin.options.gameName %>" />
         <meta name="msapplication-starturl" content="./" />
 
+        <!--SERVER RESPOND WITH  Content-Type: image/vnd.microsoft.icon-->
+        <!-- 'content-type' header media type value should be 'image/x-icon', not 'image/vnd.microsoft.icon'.
+        Content-Type: image/vnd.microsoft.icon; charset=utf-8
+        REQUEST
+        http://localhost:8000/favicon.ico
+        Content-Type: image/vnd.microsoft.icon; charset=utf-8
+        Open in Network
+        REQUEST
+        http://localhost:8000/favicon.ico -->
         <link rel="icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
         <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
-
         <link rel="icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
         <link rel="apple-touch-icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
-
         <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
 
         <title><%= htmlWebpackPlugin.options.gameName %></title>
@@ -61,6 +69,8 @@
                 z-index: 1;
                 background-color: #008080;
                 user-select: none;
+                -moz-user-select: none;
+                -webkit-user-select: none;
                 transition: opacity 1s ease-in-out;
             }
             .transparent {
@@ -85,6 +95,30 @@
 
         <!-- installs the serviceWorker -->
         <script>
+            var serviceWorkerState = 'uninitiated';
+            function logSwState(swState) {
+                switch (swState) {
+                    case 'installing':
+                            serviceWorkerState = 'installing';
+                        break;
+                    case 'installed':
+                        serviceWorkerState = 'installed';
+                        break;
+                    case 'activating':
+                        serviceWorkerState = 'activating';
+                        break;
+                    case 'activated':
+                        serviceWorkerState = 'activated';
+                        break;
+                    case 'redundant':
+                        serviceWorkerState = 'redundant';
+                        break;
+                    default:
+                        serviceWorkerState = 'unknown';
+                }
+                console.log('[PWA] Service Worker state: ' + serviceWorkerState);
+            }
+
             var beforeinstallevent;
             window.addEventListener('beforeinstallprompt', (e) => {
                 //e.preventDefault();
@@ -118,30 +152,6 @@
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('./sw.js').then((reg) => {});
                 });
-
-            var serviceWorkerState = 'uninitiated';
-            function logSwState(swState) {
-                switch (swState) {
-                    case 'installing':
-                            serviceWorkerState = 'installing';
-                        break;
-                    case 'installed':
-                        serviceWorkerState = 'installed';
-                        break;
-                    case 'activating':
-                        serviceWorkerState = 'activating';
-                        break;
-                    case 'activated':
-                        serviceWorkerState = 'activated';
-                        break;
-                    case 'redundant':
-                        serviceWorkerState = 'redundant';
-                        break;
-                    default:
-                        serviceWorkerState = 'unknown';
-                }
-                console.log('[PWA] Service Worker state: ' + serviceWorkerState);
-            }
 
             var appInstalled = false;
             window.addEventListener('appinstalled', () => {

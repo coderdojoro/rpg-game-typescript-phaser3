@@ -24,13 +24,13 @@ export const phaserConfiguration = {
     render: {
         pixelArt: true
     },
-    scene: [PreloadScene, MainMenuScene, GameScene],
+    scene: [MainMenuScene, GameScene],
     physics: {
         default: 'arcade'
     }
 };
 
-// export let game: Phaser.Game;
-// window.addEventListener('load', () => {
-//     game = new Phaser.Game(phaserConfiguration);
-// });
+export let game: Phaser.Game;
+window.addEventListener('load', () => {
+    game = new Phaser.Game(phaserConfiguration);
+});

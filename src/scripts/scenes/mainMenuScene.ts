@@ -1,6 +1,15 @@
 import 'phaser';
 
 export default class MainMenuScene extends Phaser.Scene {
+    play: Phaser.GameObjects.Sprite;
+    character: Phaser.GameObjects.Sprite;
+    options: Phaser.GameObjects.Sprite;
+    credits: Phaser.GameObjects.Sprite;
+
+    buttonDistance = 100;
+    firstButtonY = 400;
+    buttonsX = window.innerWidth - 200;
+
     constructor() {
         super({ key: 'MainMenuScene' });
     }
@@ -8,6 +17,12 @@ export default class MainMenuScene extends Phaser.Scene {
     preload() {
         this.load.image('play', 'assets/buttons/play.png');
         this.load.image('play-focus', 'assets/buttons/play-focus.png');
+
+        this.load.image('install', 'assets/buttons/install.png');
+        this.load.image('install-focus', 'assets/buttons/install-focus.png');
+        this.load.image('launch', 'assets/buttons/launch.png');
+        this.load.image('launch-focus', 'assets/buttons/launch-focus.png');
+
         this.load.image('character', 'assets/buttons/character.png');
         this.load.image('character-focus', 'assets/buttons/character-focus.png');
         this.load.image('options', 'assets/buttons/options.png');
@@ -20,6 +35,8 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     create() {
+        window.addEventListener('resize', () => this.windowResized(true), false);
+
         console.log('Main Menu');
         this.cameras.main.fadeIn();
 
@@ -34,70 +51,98 @@ export default class MainMenuScene extends Phaser.Scene {
         let title = this.add.image(200, screenCenterY - 100, 'title');
         title.setOrigin(0, 0.5);
 
-        let buttonDistance = 100;
-        let firstButtonY = 400;
-        let buttonsX = window.innerWidth - 200;
+        this.play = this.add.sprite(this.buttonsX, this.firstButtonY, 'play').setInteractive();
+        this.play.setOrigin(1, 1);
+        this.character = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance, 'character').setInteractive();
+        this.character.setOrigin(1, 1);
+        this.options = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance * 2, 'options').setInteractive();
+        this.options.setOrigin(1, 1);
+        this.credits = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance * 3, 'credits').setInteractive();
+        this.credits.setOrigin(1, 1);
 
-        let play = this.add.sprite(buttonsX, firstButtonY, 'play').setInteractive();
-        play.setOrigin(1, 1);
-        let character = this.add.sprite(buttonsX, firstButtonY + buttonDistance, 'character').setInteractive();
-        character.setOrigin(1, 1);
-        let options = this.add.sprite(buttonsX, firstButtonY + buttonDistance * 2, 'options').setInteractive();
-        options.setOrigin(1, 1);
-        let credits = this.add.sprite(buttonsX, firstButtonY + buttonDistance * 3, 'credits').setInteractive();
-        credits.setOrigin(1, 1);
+        this.setInnteractiveButtons();
 
-        play.on(Phaser.Input.Events.POINTER_OVER, () => {
-            play.setTexture('play-focus');
+        this.windowResized(true);
+    }
+
+    setInnteractiveButtons() {
+        this.play.on(Phaser.Input.Events.POINTER_OVER, () => {
+            this.play.setTexture('play-focus');
         });
-        play.on(Phaser.Input.Events.POINTER_OUT, () => {
-            play.setTexture('play');
+        this.play.on(Phaser.Input.Events.POINTER_OUT, () => {
+            this.play.setTexture('play');
         });
-        play.on(Phaser.Input.Events.POINTER_DOWN, () => {
-            play.setTexture('play');
+        this.play.on(Phaser.Input.Events.POINTER_DOWN, () => {
+            this.play.setTexture('play');
         });
-        play.on(Phaser.Input.Events.POINTER_UP, () => {
-            play.setTexture('install-focus');
+        this.play.on(Phaser.Input.Events.POINTER_UP, () => {
+            this.play.setTexture('install-focus');
             this.scene.start('GameScene');
         });
 
-        character.on(Phaser.Input.Events.POINTER_OVER, () => {
-            character.setTexture('character-focus');
+        this.character.on(Phaser.Input.Events.POINTER_OVER, () => {
+            this.character.setTexture('character-focus');
         });
-        character.on(Phaser.Input.Events.POINTER_OUT, () => {
-            character.setTexture('character');
+        this.character.on(Phaser.Input.Events.POINTER_OUT, () => {
+            this.character.setTexture('character');
         });
-        character.on(Phaser.Input.Events.POINTER_DOWN, () => {
-            character.setTexture('character');
+        this.character.on(Phaser.Input.Events.POINTER_DOWN, () => {
+            this.character.setTexture('character');
         });
-        character.on(Phaser.Input.Events.POINTER_UP, () => {
-            character.setTexture('character-focus');
-        });
-
-        options.on(Phaser.Input.Events.POINTER_OVER, () => {
-            options.setTexture('options-focus');
-        });
-        options.on(Phaser.Input.Events.POINTER_OUT, () => {
-            options.setTexture('options');
-        });
-        options.on(Phaser.Input.Events.POINTER_DOWN, () => {
-            options.setTexture('options');
-        });
-        options.on(Phaser.Input.Events.POINTER_UP, () => {
-            options.setTexture('options-focus');
+        this.character.on(Phaser.Input.Events.POINTER_UP, () => {
+            this.character.setTexture('character-focus');
         });
 
-        credits.on(Phaser.Input.Events.POINTER_OVER, () => {
-            credits.setTexture('credits-focus');
+        this.options.on(Phaser.Input.Events.POINTER_OVER, () => {
+            this.options.setTexture('options-focus');
         });
-        credits.on(Phaser.Input.Events.POINTER_OUT, () => {
-            credits.setTexture('credits');
+        this.options.on(Phaser.Input.Events.POINTER_OUT, () => {
+            this.options.setTexture('options');
         });
-        credits.on(Phaser.Input.Events.POINTER_DOWN, () => {
-            credits.setTexture('credits');
+        this.options.on(Phaser.Input.Events.POINTER_DOWN, () => {
+            this.options.setTexture('options');
         });
-        credits.on(Phaser.Input.Events.POINTER_UP, () => {
-            credits.setTexture('credits-focus');
+        this.options.on(Phaser.Input.Events.POINTER_UP, () => {
+            this.options.setTexture('options-focus');
         });
+
+        this.credits.on(Phaser.Input.Events.POINTER_OVER, () => {
+            this.credits.setTexture('credits-focus');
+        });
+        this.credits.on(Phaser.Input.Events.POINTER_OUT, () => {
+            this.credits.setTexture('credits');
+        });
+        this.credits.on(Phaser.Input.Events.POINTER_DOWN, () => {
+            this.credits.setTexture('credits');
+        });
+        this.credits.on(Phaser.Input.Events.POINTER_UP, () => {
+            this.credits.setTexture('credits-focus');
+        });
+    }
+
+    windowResized(restart) {
+        console.log('canvas resized' + window.innerWidth);
+
+        let htmlCanvas: HTMLCollectionOf<HTMLCanvasElement> = document.getElementsByTagName('canvas');
+        //image-rendering: pixelated; margin-left: 279px; margin-top: 184px;
+        htmlCanvas[0].style.imageRendering = 'pixelated';
+        htmlCanvas[0].style.marginLeft = '0';
+        htmlCanvas[0].style.marginTop = '0';
+        // htmlCanvas[0].style.width = String(window.innerWidth);
+        // htmlCanvas[0].style.height = String(window.innerHeight);
+        htmlCanvas[0].style.width = '100%';
+        htmlCanvas[0].style.height = '100%';
+        // ...then set the internal size to match
+        htmlCanvas[0].width = htmlCanvas[0].offsetWidth;
+        htmlCanvas[0].height = htmlCanvas[0].offsetHeight;
+        if (this.scale) this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
+        if (this.scale) this.scale.setGameSize(window.innerWidth, window.innerHeight).getParentBounds();
+        // if (this.scale) this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
+        if (this.scale) this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
+        console.log('restart' + !restart);
+
+        this.play.setX(this.buttonsX);
+        this.play.setY(this.firstButtonY);
+        
     }
 }
