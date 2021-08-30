@@ -86,8 +86,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
         this.play = this.add.sprite(this.buttonsX, this.firstButtonY, 'play').setInteractive();
         this.play.setOrigin(0, 0);
-        this.play = this.add.sprite(this.buttonsX, this.firstButtonY, 'play').setInteractive();
-        this.play.setOrigin(0, 0);
+        this.play.setScale(0.6);
         this.character = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance, 'character').setInteractive();
         this.character.setOrigin(0, 0);
         this.options = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance * 2, 'options').setInteractive();

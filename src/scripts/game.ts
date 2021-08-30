@@ -16,8 +16,8 @@ export const phaserConfiguration = {
     backgroundColor: '#008080',
     scale: {
         parent: 'phaser-game',
-        mode: Phaser.Scale.NONE,
-        autoCenter: Phaser.Scale.NONE,
+        mode: Phaser.Scale.FIT,
+        autoCenter: Phaser.Scale.RESIZE,
         width: width, //DEFAULT_WIDTH
         height: height //DEFAULT_HEIGHT
     },
