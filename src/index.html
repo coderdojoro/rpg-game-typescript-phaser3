@@ -95,72 +95,83 @@
 
         <!-- installs the serviceWorker -->
         <script>
-            var serviceWorkerState = 'uninitiated';
-            function logSwState(swState) {
-                switch (swState) {
-                    case 'installing':
-                            serviceWorkerState = 'installing';
-                        break;
-                    case 'installed':
-                        serviceWorkerState = 'installed';
-                        break;
-                    case 'activating':
-                        serviceWorkerState = 'activating';
-                        break;
-                    case 'activated':
-                        serviceWorkerState = 'activated';
-                        break;
-                    case 'redundant':
-                        serviceWorkerState = 'redundant';
-                        break;
-                    default:
-                        serviceWorkerState = 'unknown';
-                }
-                console.log('[PWA] Service Worker state: ' + serviceWorkerState);
-            }
+            // var serviceWorkerState = 'uninitiated';
+            // function logSwState(swState) {
+            //     switch (swState) {
+            //         case 'installing':
+            //             serviceWorkerState = 'installing';
+            //             break;
+            //         case 'installed':
+            //             serviceWorkerState = 'installed';
+            //             break;
+            //         case 'activating':
+            //             serviceWorkerState = 'activating';
+            //             break;
+            //         case 'activated':
+            //             serviceWorkerState = 'activated';
+            //             break;
+            //         case 'redundant':
+            //             serviceWorkerState = 'redundant';
+            //             break;
+            //         default:
+            //             serviceWorkerState = 'unknown';
+            //     }
+            //     console.log('[PWA] Service Worker state: ' + serviceWorkerState);
+            // }
 
-            var beforeinstallevent;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                //e.preventDefault();
-                console.log('.... define before install');
-                beforeinstallevent = e;
-            });
+            // var beforeinstallevent;
+            // window.addEventListener('beforeinstallprompt', (e) => {
+            //     //e.preventDefault();
+            //     console.log('.... define before install');
+            //     beforeinstallevent = e;
+            // });
 
-            function runningStandalone() {
-                if (window.matchMedia('(display-mode: standalone)').matches) {
-                    console.log('[PWA] app is running as standalone');
-                    return true;
-                }
-                console.log('[PWA] app is running in browser');
-                return false;
-            }
+            // function runningStandalone() {
+            //     if (window.matchMedia('(display-mode: standalone)').matches) {
+            //         console.log('[PWA] app is running as standalone');
+            //         return true;
+            //     }
+            //     console.log('[PWA] app is running in browser');
+            //     return false;
+            // }
 
-            console.log('InstalledRelatedApps: ' + navigator.getInstalledRelatedApps());
-            navigator
-                .getInstalledRelatedApps()
-                .then((value) => {
-                    console.log('InstalledRelatedApps' + value);
-                    console.log(value);
-                })
-                .catch((err) => {
-                    console.log('InstalledRelatedApps' + err);
-                });
+            // console.log('InstalledRelatedApps: ' + navigator.getInstalledRelatedApps());
+            // navigator
+            //     .getInstalledRelatedApps()
+            //     .then((value) => {
+            //         console.log('InstalledRelatedApps' + value);
+            //         console.log(value);
+            //     })
+            //     .catch((err) => {
+            //         console.log('InstalledRelatedApps' + err);
+            //     });
 
-            console.log('URL: ' + document.referrer);
-            if ('serviceWorker' in navigator) {
-                console.log('.... register load event');
-                window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./sw.js').then((reg) => {});
-                });
+            // console.log('URL: ' + document.referrer);
+            // if ('serviceWorker' in navigator) {
+            //     console.log('.... register load event');
+            //     window.addEventListener('load', () => {
+            //         navigator.serviceWorker.register('./sw.js').then((reg) => {});
+            //     });
 
-            var appInstalled = false;
-            window.addEventListener('appinstalled', () => {
-                console.log('~~~ PWA was installed');
-                appInstalled = true;
-            });
-            window.addEventListener('activate', () => {
-                console.log('~~~ PWA activated');
-            });
+            // var appInstalled = false;
+            // window.addEventListener('appinstalled', () => {
+            //     console.log('~~~ PWA was installed');
+            //     appInstalled = true;
+            // });
+            // window.addEventListener('activate', () => {
+            //     console.log('~~~ PWA activated');
+            // });
+
+            var supportsOrientationChange = 'onorientationchange' in window,
+                orientationEvent = supportsOrientationChange ? 'orientationchange' : 'resize';
+
+            window.addEventListener(
+                orientationEvent,
+                function () {
+                    console.log('the orientation has changed');
+                },
+                false
+            );
         </script>
     </head>
     <body id="htmlBody">

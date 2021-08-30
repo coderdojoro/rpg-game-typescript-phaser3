@@ -17,7 +17,7 @@ export const phaserConfiguration = {
     scale: {
         parent: 'phaser-game',
         mode: Phaser.Scale.NONE,
-        autoCenter: Phaser.Scale.CENTER_BOTH,
+        autoCenter: Phaser.Scale.NONE,
         width: width, //DEFAULT_WIDTH
         height: height //DEFAULT_HEIGHT
     },
@@ -26,7 +26,14 @@ export const phaserConfiguration = {
     },
     scene: [MainMenuScene, GameScene],
     physics: {
-        default: 'arcade'
+        default: 'arcade',
+        arcade: {
+            gravity: { y: 300 },
+            debug: false,
+            debugShowVelocity: true,
+            debugShowBody: true,
+            debugShowStaticBody: true
+        }
     }
 };
 

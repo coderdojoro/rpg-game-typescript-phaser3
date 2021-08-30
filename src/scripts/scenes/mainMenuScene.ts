@@ -1,5 +1,7 @@
 import 'phaser';
 
+declare var game: Phaser.Game;
+
 export default class MainMenuScene extends Phaser.Scene {
     play: Phaser.GameObjects.Sprite;
     character: Phaser.GameObjects.Sprite;
@@ -7,8 +9,13 @@ export default class MainMenuScene extends Phaser.Scene {
     credits: Phaser.GameObjects.Sprite;
 
     buttonDistance = 100;
-    firstButtonY = 400;
-    buttonsX = window.innerWidth - 200;
+    firstButtonY = 50;
+    buttonsX = 100;
+
+    screenCenterX: number;
+    screenCenterY: number;
+
+    image: Phaser.GameObjects.Image;
 
     constructor() {
         super({ key: 'MainMenuScene' });
@@ -30,39 +37,65 @@ export default class MainMenuScene extends Phaser.Scene {
         this.load.image('credits', 'assets/buttons/credits.png');
         this.load.image('credits-focus', 'assets/buttons/credits-focus.png');
 
-        this.load.image('bg', 'assets/main-menu-background.jpg');
-        this.load.image('title', 'assets/main-menu-game-titletitle2.png');
+        this.load.image('bg', 'assets/background.png');
+        this.load.image('title', 'assets/title-bg.png');
+    }
+
+    resizeCanvas() {
+        console.log('[WIP] resize canvas');
+        let htmlCanvas: HTMLCollectionOf<HTMLCanvasElement> = document.getElementsByTagName('canvas');
+
+        htmlCanvas[0].style.display = 'block';
+        htmlCanvas[0].style.imageRendering = 'pixelated';
+        htmlCanvas[0].style.marginLeft = '0';
+        htmlCanvas[0].style.marginTop = '0';
+        htmlCanvas[0].style.width = '100%';
+        htmlCanvas[0].style.height = '100%';
+        htmlCanvas[0].width = htmlCanvas[0].offsetWidth;
+        htmlCanvas[0].height = htmlCanvas[0].offsetHeight;
+
+        this.game.scale.resize(htmlCanvas[0].offsetWidth, htmlCanvas[0].offsetHeight);
+        this.cameras.main.setViewport(0, 0, htmlCanvas[0].offsetWidth, htmlCanvas[0].offsetHeight);
+
+        this.image.displayHeight = window.innerHeight;
+        this.image.displayWidth = window.innerWidth;
     }
 
     create() {
-        window.addEventListener('resize', () => this.windowResized(true), false);
+        window.addEventListener('resize', this.resizeCanvas.bind(this), false);
+        screen.orientation.addEventListener('change', this.resizeCanvas.bind(this));
 
-        console.log('Main Menu');
         this.cameras.main.fadeIn();
 
-        const screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
-        const screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
+        // let bg = this.add.image(0, 0, 'bg');
+        // bg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+        // bg.setOrigin(0, 0);
+        // bg.setX(0);
+        // bg.setY(0);
 
-        let bg = this.add.image(screenCenterX, screenCenterY, 'bg');
-        bg.setDisplaySize(this.cameras.main.width, this.cameras.main.height);
+        this.image = this.add.image(0, 0, 'bg');
+        this.image.setOrigin(0, 0);
+        // image.displayWidth = window.innerWidth;
+        // image.scaleY = image.scaleX;
+        this.image.displayHeight = window.innerHeight;
+        this.image.displayWidth = window.innerWidth;
 
-        this.cameras.main.backgroundColor = Phaser.Display.Color.HexStringToColor('#008080');
-
-        let title = this.add.image(200, screenCenterY - 100, 'title');
-        title.setOrigin(0, 0.5);
+        let title = this.add.image(500, 50, 'title');
+        // title.setDisplaySize(this.cameras.main.worldView.x, this.cameras.main.worldView.y);
+        title.setOrigin(0, 0);
 
         this.play = this.add.sprite(this.buttonsX, this.firstButtonY, 'play').setInteractive();
-        this.play.setOrigin(1, 1);
+        this.play.setOrigin(0, 0);
+        this.play = this.add.sprite(this.buttonsX, this.firstButtonY, 'play').setInteractive();
+        this.play.setOrigin(0, 0);
         this.character = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance, 'character').setInteractive();
-        this.character.setOrigin(1, 1);
+        this.character.setOrigin(0, 0);
         this.options = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance * 2, 'options').setInteractive();
-        this.options.setOrigin(1, 1);
+        this.options.setOrigin(0, 0);
         this.credits = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance * 3, 'credits').setInteractive();
-        this.credits.setOrigin(1, 1);
+        this.credits.setOrigin(0, 0);
 
         this.setInnteractiveButtons();
-
-        this.windowResized(true);
     }
 
     setInnteractiveButtons() {
@@ -111,7 +144,7 @@ export default class MainMenuScene extends Phaser.Scene {
         });
         this.credits.on(Phaser.Input.Events.POINTER_OUT, () => {
             this.credits.setTexture('credits');
-        });
+        }); //
         this.credits.on(Phaser.Input.Events.POINTER_DOWN, () => {
             this.credits.setTexture('credits');
         });
@@ -120,29 +153,34 @@ export default class MainMenuScene extends Phaser.Scene {
         });
     }
 
-    windowResized(restart) {
-        console.log('canvas resized' + window.innerWidth);
+    // windowResized(restart) {
+    //     console.log('canvas resized' + window.innerWidth);
 
-        let htmlCanvas: HTMLCollectionOf<HTMLCanvasElement> = document.getElementsByTagName('canvas');
-        //image-rendering: pixelated; margin-left: 279px; margin-top: 184px;
-        htmlCanvas[0].style.imageRendering = 'pixelated';
-        htmlCanvas[0].style.marginLeft = '0';
-        htmlCanvas[0].style.marginTop = '0';
-        // htmlCanvas[0].style.width = String(window.innerWidth);
-        // htmlCanvas[0].style.height = String(window.innerHeight);
-        htmlCanvas[0].style.width = '100%';
-        htmlCanvas[0].style.height = '100%';
-        // ...then set the internal size to match
-        htmlCanvas[0].width = htmlCanvas[0].offsetWidth;
-        htmlCanvas[0].height = htmlCanvas[0].offsetHeight;
-        if (this.scale) this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
-        if (this.scale) this.scale.setGameSize(window.innerWidth, window.innerHeight).getParentBounds();
-        // if (this.scale) this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
-        if (this.scale) this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
-        console.log('restart' + !restart);
+    //     let htmlCanvas: HTMLCollectionOf<HTMLCanvasElement> = document.getElementsByTagName('canvas');
+    //     //image-rendering: pixelated; margin-left: 279px; margin-top: 184px;
+    //     htmlCanvas[0].style.imageRendering = 'pixelated';
+    //     htmlCanvas[0].style.marginLeft = '0';
+    //     htmlCanvas[0].style.marginTop = '0';
+    //     // htmlCanvas[0].style.width = String(window.innerWidth);
+    //     // htmlCanvas[0].style.height = String(window.innerHeight);
+    //     htmlCanvas[0].style.width = '100%';
+    //     htmlCanvas[0].style.height = '100%';
+    //     // ...then set the internal size to match
+    //     htmlCanvas[0].width = htmlCanvas[0].offsetWidth;
+    //     htmlCanvas[0].height = htmlCanvas[0].offsetHeight;
+    //     if (this.scale) this.scale.autoCenter = Phaser.Scale.Center.CENTER_BOTH;
+    //     if (this.scale) this.scale.setGameSize(window.innerWidth, window.innerHeight).getParentBounds();
+    //     // if (this.scale) this.scale.displaySize.resize(window.innerWidth, window.innerHeight);
+    //     if (this.scale) this.physics.world.setBounds(0, 0, window.innerWidth, window.innerHeight);
+    //     console.log('restart' + !restart);
 
-        this.play.setX(this.buttonsX);
-        this.play.setY(this.firstButtonY);
-        
+    //     this.play.setX(this.buttonsX);
+    //     this.play.setY(this.firstButtonY);
+
+    // }
+
+    update() {
+        this.screenCenterX = this.cameras.main.worldView.x + this.cameras.main.width / 2;
+        this.screenCenterY = this.cameras.main.worldView.y + this.cameras.main.height / 2;
     }
 }

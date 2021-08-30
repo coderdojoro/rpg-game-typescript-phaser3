@@ -56,7 +56,6 @@ export default class PreloadScene extends Phaser.Scene {
 
         let start = this.add.sprite(screenCenterX, 310, 'start').setInteractive();
         start.setOrigin(0.5, 1);
-        // start.setScale(0.6, 0.6);
 
         start.on(Phaser.Input.Events.POINTER_OVER, () => {
             start.setTexture('start-focus');
