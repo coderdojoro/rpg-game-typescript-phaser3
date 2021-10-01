@@ -14,9 +14,8 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 self.addEventListener('install', (evt) => {
     console.log('PWA install...');
-    appInstalled = true;
     //skip cache
-    evt.skipWaiting();
+    // evt.skipWaiting();
     return;
 
     evt.waitUntil(
@@ -26,7 +25,7 @@ self.addEventListener('install', (evt) => {
                 '/favicon.ico',
                 '/index.html',
                 '/main.bundle.js',
-                '/manifest.webmanifest',
+                '/manifest.json',
                 '/sw.js',
                 'vendors.bundle.js',
                 '/icons/icons-192.png',

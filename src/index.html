@@ -8,7 +8,7 @@
 
         <meta name="theme-color" content="#008080" />
 
-        <link rel="manifest" href="./manifest.webmanifest" />
+        <link rel="manifest" href="./manifest.json" />
 
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -16,15 +16,6 @@
         <meta name="apple-mobile-web-app-title" content="<%= htmlWebpackPlugin.options.gameName %>" />
         <meta name="msapplication-starturl" content="./" />
 
-        <!--SERVER RESPOND WITH  Content-Type: image/vnd.microsoft.icon-->
-        <!-- 'content-type' header media type value should be 'image/x-icon', not 'image/vnd.microsoft.icon'.
-        Content-Type: image/vnd.microsoft.icon; charset=utf-8
-        REQUEST
-        http://localhost:8000/favicon.ico
-        Content-Type: image/vnd.microsoft.icon; charset=utf-8
-        Open in Network
-        REQUEST
-        http://localhost:8000/favicon.ico -->
         <link rel="icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
         <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
@@ -123,13 +114,13 @@
             //         console.log('InstalledRelatedApps' + err);
             //     });
 
-            const relatedApps = navigator.getInstalledRelatedApps();
-            relatedApps.then((val) => {
-                console.log('related apps: ' + val.length);
-                val.forEach((app) => {
-                    console.log(app.id, app.platform, app.url);
-                });
-            });
+            // const relatedApps = navigator.getInstalledRelatedApps();
+            // relatedApps.then((val) => {
+            //     console.log('related apps: ' + val.length);
+            //     val.forEach((app) => {
+            //         console.log(app.id, app.platform, app.url);
+            //     });
+            // });
 
             console.log('URL: ' + document.referrer);
             if ('serviceWorker' in navigator) {
@@ -139,11 +130,13 @@
                 });
             }
 
-            var appInstalled = false;
-            window.addEventListener('appinstalled', () => {
-                console.log('~~~ PWA was installed');
-                appInstalled = true;
-            });
+            //DEPRECATED
+            // var appInstalled = false;
+            // window.addEventListener('appinstalled', () => {
+            //     console.log('~~~ PWA was installed');
+            //     appInstalled = true;
+            // });
+            //DEPRECATED
 
             var supportsOrientationChange = 'onorientationchange' in window,
                 orientationEvent = supportsOrientationChange ? 'orientationchange' : 'resize';

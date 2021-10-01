@@ -1,9 +1,7 @@
 import 'phaser';
-import { UAParser } from 'ua-parser-js';
 
 declare var game: Phaser.Game;
 declare var beforeinstallevent: any;
-declare var appInstalled: boolean;
 declare function runningStandalone(): boolean;
 
 export default class MainMenuScene extends Phaser.Scene {
@@ -308,18 +306,25 @@ export default class MainMenuScene extends Phaser.Scene {
 
     // }
 
+    relatedApps: any;
     update() {
-        if (!runningStandalone() && appInstalled) {
-            console.log(' ----->>  Open in new window');
-            window.open('http://localhost:8000/');
+        if (!this.relatedApps) {
+            this.relatedApps = (navigator as any).getInstalledRelatedApps();
+            this.relatedApps.then((val) => {
+                console.log('related apps: ' + val.length);
+                this.relatedApps = undefined;
+                val.forEach((app) => {
+                    console.log(app.id, app.platform, app.url);
+                });
+            });
         }
 
-        if (appInstalled && this.install) {
+        if (this.install && runningStandalone()) {
             this.install.destroy();
             this.install = null;
         }
 
-        if (beforeinstallevent && !this.install && !runningStandalone() && !appInstalled) {
+        if (beforeinstallevent && !this.install && !runningStandalone()) {
             this.install = this.add.sprite(this.buttonsX, this.firstButtonY - this.buttonDistance, 'install').setInteractive();
             this.install.setOrigin(1, 0);
             this.install.on(Phaser.Input.Events.POINTER_OVER, () => {
@@ -331,7 +336,6 @@ export default class MainMenuScene extends Phaser.Scene {
             this.install.on(Phaser.Input.Events.POINTER_DOWN, () => {
                 (<Phaser.GameObjects.Sprite>this.install).setTexture('install');
             });
-            console.log('appInstalled: ' + appInstalled);
             this.install.on(Phaser.Input.Events.POINTER_UP, () => {
                 console.log('click install');
                 console.log(beforeinstallevent);

@@ -1,6 +1,6 @@
 {
     "short_name": "CoderDojo RPG Game",
-    "name": "CoderDojo RPG TypeScript Game ",
+    "name": "CoderDojo RPG TypeScript Game",
     "description": "Application made in TypeScript with webpack. PWA enabled.",
     "icons": [
         {
@@ -35,10 +35,18 @@
     "scope": "./",
     "theme_color": "#008080",
     "capture_links": "new-client",
+    "prefer_related_applications": true,
     "related_applications": [
         {
             "platform": "webapp",
-            "url": "https://phaser-rpg.herokuapp.com/manifest.webmanifest"
+            "id": "com.coderdojo.rpg",
+            "url": "http://localhost:8000/manifest.json"
+        }
+    ],
+    "protocol_handlers": [
+        {
+            "protocol": "coderdojo",
+            "url": "/index.html"
         }
     ]
 }
