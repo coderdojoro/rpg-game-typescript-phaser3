@@ -95,47 +95,24 @@
 
         <!-- installs the serviceWorker -->
         <script>
-            // var serviceWorkerState = 'uninitiated';
-            // function logSwState(swState) {
-            //     switch (swState) {
-            //         case 'installing':
-            //             serviceWorkerState = 'installing';
-            //             break;
-            //         case 'installed':
-            //             serviceWorkerState = 'installed';
-            //             break;
-            //         case 'activating':
-            //             serviceWorkerState = 'activating';
-            //             break;
-            //         case 'activated':
-            //             serviceWorkerState = 'activated';
-            //             break;
-            //         case 'redundant':
-            //             serviceWorkerState = 'redundant';
-            //             break;
-            //         default:
-            //             serviceWorkerState = 'unknown';
-            //     }
-            //     console.log('[PWA] Service Worker state: ' + serviceWorkerState);
-            // }
+            var beforeinstallevent;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                //e.preventDefault();
+                console.log('.... define before install');
+                beforeinstallevent = e;
+            });
 
-            // var beforeinstallevent;
-            // window.addEventListener('beforeinstallprompt', (e) => {
-            //     //e.preventDefault();
-            //     console.log('.... define before install');
-            //     beforeinstallevent = e;
-            // });
+            function runningStandalone() {
+                if (window.matchMedia('(display-mode: standalone)').matches) {
+                    // console.log('[PWA] app is running as standalone');
+                    return true;
+                }
+                // console.log('[PWA] app is running in browser');
+                return false;
+            }
 
-            // function runningStandalone() {
-            //     if (window.matchMedia('(display-mode: standalone)').matches) {
-            //         console.log('[PWA] app is running as standalone');
-            //         return true;
-            //     }
-            //     console.log('[PWA] app is running in browser');
-            //     return false;
-            // }
-
-            // console.log('InstalledRelatedApps: ' + navigator.getInstalledRelatedApps());
+            // console.log('InstalledRelatedApps:');
+            // console.log(navigator.getInstalledRelatedApps());
             // navigator
             //     .getInstalledRelatedApps()
             //     .then((value) => {
@@ -146,21 +123,27 @@
             //         console.log('InstalledRelatedApps' + err);
             //     });
 
-            // console.log('URL: ' + document.referrer);
-            // if ('serviceWorker' in navigator) {
-            //     console.log('.... register load event');
-            //     window.addEventListener('load', () => {
-            //         navigator.serviceWorker.register('./sw.js').then((reg) => {});
-            //     });
+            const relatedApps = navigator.getInstalledRelatedApps();
+            relatedApps.then((val) => {
+                console.log('related apps: ' + val.length);
+                val.forEach((app) => {
+                    console.log(app.id, app.platform, app.url);
+                });
+            });
 
-            // var appInstalled = false;
-            // window.addEventListener('appinstalled', () => {
-            //     console.log('~~~ PWA was installed');
-            //     appInstalled = true;
-            // });
-            // window.addEventListener('activate', () => {
-            //     console.log('~~~ PWA activated');
-            // });
+            console.log('URL: ' + document.referrer);
+            if ('serviceWorker' in navigator) {
+                console.log('.... register load event');
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./sw.js').then((reg) => {});
+                });
+            }
+
+            var appInstalled = false;
+            window.addEventListener('appinstalled', () => {
+                console.log('~~~ PWA was installed');
+                appInstalled = true;
+            });
 
             var supportsOrientationChange = 'onorientationchange' in window,
                 orientationEvent = supportsOrientationChange ? 'orientationchange' : 'resize';
@@ -172,13 +155,34 @@
                 },
                 false
             );
+
+            window.matchMedia('(orientation: portrait)').addListener(function (m) {
+                if (m.matches) {
+                    logOrienation();
+                } else {
+                    logOrienation();
+                }
+            });
+
+            window.addEventListener('resize', logOrienation, false);
+            screen.orientation.addEventListener('change', logOrienation);
+
+            function logOrienation() {
+                screenOrientation = window.innerHeight > window.innerWidth ? 90 : 0;
+                if (screenOrientation) {
+                    console.log('| Orietation: portrait');
+                } else {
+                    console.log('| Orietation: landscape');
+                }
+                console.log('| Pixel ratio: ' + window.devicePixelRatio);
+                console.log('| Pixel height x width: ' + window.screen.availHeight + ' x ' + window.screen.availWidth);
+            }
         </script>
     </head>
     <body id="htmlBody">
-        <!--<div id="loading-screen">
+        <div id="loading-screen">
             <h2 id="item">loading...</h2>
-        </div>-->
-
+        </div>
         <div id="phaser-game"></div>
     </body>
 </html>

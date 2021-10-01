@@ -7,6 +7,18 @@
             "src": "./icons/icons-192.png",
             "type": "image/png",
             "sizes": "192x192",
+            "purpose": "any"
+        },
+        {
+            "src": "./icons/icons-512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any"
+        },
+        {
+            "src": "./icons/icons-192.png",
+            "type": "image/png",
+            "sizes": "192x192",
             "purpose": "maskable"
         },
         {
@@ -26,7 +38,7 @@
     "related_applications": [
         {
             "platform": "webapp",
-            "url": "http://localhost:8080/"
+            "url": "https://phaser-rpg.herokuapp.com/manifest.webmanifest"
         }
     ]
 }

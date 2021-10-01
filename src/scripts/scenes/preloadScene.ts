@@ -10,7 +10,6 @@ declare function runningStandalone(): boolean;
 export default class PreloadScene extends Phaser.Scene {
     install: Phaser.GameObjects.Sprite | null;
     launch: Phaser.GameObjects.Sprite | null;
-    resizeListener;
 
     constructor() {
         super({ key: 'PreloadScene' });

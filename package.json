@@ -35,8 +35,8 @@
         "author": "Yannick Deubel (https://github.com/yandeu)"
     },
     "engines": {
-        "node": ">14.x",
-        "npm": "6.x"
+        "node": "~14.x",
+        "npm": "~6.x"
     },
     "license": "MIT",
     "devDependencies": {
@@ -53,9 +53,11 @@
         "webpack-dev-server": "^3.11.2",
         "webpack-merge": "^5.7.3",
         "webpack-obfuscator": "^3.2.0",
-        "workbox-webpack-plugin": "^6.0.2"
+        "workbox-webpack-plugin": "^6.0.2",
+        "@types/ua-parser-js": "0.7.36"
     },
     "dependencies": {
-        "phaser": "^3.55.2"
+        "phaser": "^3.55.2",
+        "ua-parser-js": "^0.7.28"
     }
 }
