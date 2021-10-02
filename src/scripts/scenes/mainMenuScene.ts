@@ -22,8 +22,8 @@ export default class MainMenuScene extends Phaser.Scene {
 
     screenCenterX: number;
 
-    letterDistance: number = 25;
-    gravity: number = 2300;
+    letterDistance: number = 23;
+    gravity: number = 4300;
     letters: Array<Phaser.GameObjects.Text> = [];
     letterYDistance: number = 2;
     bounceY: number = 0.8;
@@ -33,13 +33,13 @@ export default class MainMenuScene extends Phaser.Scene {
 
     bouncingTexts: Array<BouncingText> = [
         {
-            text: 'Move the hero with W,A,S,D keys and SPACE to use objects.',
+            text: 'Move the hero with W,A,S,D keys and use SPACE for interactions with the game items.',
             startLetters(): Array<number> {
                 return [this.text.length / 2];
             }
         },
         {
-            text: 'This is a demo project for CoderDojo clubs.',
+            text: 'This is a demo project for CoderDojo clubs. It was build for București Nord Dojo.',
             startLetters(): Array<number> {
                 return [0];
             }
@@ -51,7 +51,7 @@ export default class MainMenuScene extends Phaser.Scene {
             }
         },
         {
-            text: 'Start by editing the GameScene class in /src/scenes folder.',
+            text: 'Start working on the project by editing the GameScene class in /src/scenes folder.',
             startLetters(): Array<number> {
                 return [this.text.length / 4, (this.text.length / 4) * 3];
             }
@@ -165,7 +165,7 @@ export default class MainMenuScene extends Phaser.Scene {
         text.setX(letterX);
         text.setColor('#' + this.colors[Math.floor(Math.random() * this.colors.length)]);
         text.setFontSize(36);
-        text.setStroke('#000000', 2);
+        text.setStroke('#000000', 4);
         text.setFontFamily('"Syne Mono"');
         text.setFontStyle('bold');
         text.setOrigin(0, 1);
