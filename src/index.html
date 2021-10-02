@@ -8,7 +8,7 @@
 
         <meta name="theme-color" content="#008080" />
 
-        <link rel="manifest" href="./manifest.json" />
+        <!-- <link rel="manifest" href="./manifest.json" /> -->
 
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -23,6 +23,9 @@
         <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
 
         <title><%= htmlWebpackPlugin.options.gameName %></title>
+
+        <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet" />
+
         <style>
             html,
             #phaser-game {
@@ -79,6 +82,9 @@
                 position: absolute;
                 top: 0;
                 left: 0;
+            }
+            .fontPreload {
+                font-family: 'Syne Mono';
             }
         </style>
 
@@ -173,6 +179,7 @@
         </script>
     </head>
     <body id="htmlBody">
+        <h1 class="fontPreload" style="position: absolute; top: -500px; right: -500">Font Preload</h1>
         <div id="loading-screen">
             <h2 id="item">loading...</h2>
         </div>
