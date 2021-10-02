@@ -29,28 +29,29 @@ export default class MainMenuScene extends Phaser.Scene {
     bounceY: number = 0.8;
     currentBouncingText: number = -1;
     colors: string[] = ['33ff33', '3399ff', 'ff3333', 'fff833'];
+    changeText = false;
 
     bouncingTexts: Array<BouncingText> = [
         {
-            text: 'CoderDojo este o miscare internationala, initiata in Irlana',
+            text: 'Move the hero with W,A,S,D keys and SPACE to use objects.',
             startLetters(): Array<number> {
                 return [this.text.length / 2];
             }
         },
         {
-            text: 'Then I convert from User -> UserJSON before ‘stringifying’',
+            text: 'This is a demo project for CoderDojo clubs.',
             startLetters(): Array<number> {
                 return [0];
             }
         },
         {
-            text: 'a contrived example. In real cases, there will be a lot more',
+            text: 'The project is built using TypeScript language and Phaser game engine.',
             startLetters(): Array<number> {
                 return [this.text.length - 1];
             }
         },
         {
-            text: 'perhaps due to running webpack in --watch mode.',
+            text: 'Start by editing the GameScene class in /src/scenes folder.',
             startLetters(): Array<number> {
                 return [this.text.length / 4, (this.text.length / 4) * 3];
             }
@@ -162,10 +163,9 @@ export default class MainMenuScene extends Phaser.Scene {
         let text = this.add.text(0, 770, letter);
         this.letters.push(text);
         text.setX(letterX);
-        text.setColor('33ff33');
-        console.log(this.colors[Math.floor(Math.random() * this.colors.length)]);
+        text.setColor('#' + this.colors[Math.floor(Math.random() * this.colors.length)]);
         text.setFontSize(36);
-        text.setStroke('#ffffff', 4);
+        text.setStroke('#000000', 2);
         text.setFontFamily('"Syne Mono"');
         text.setFontStyle('bold');
         text.setOrigin(0, 1);
@@ -244,7 +244,6 @@ export default class MainMenuScene extends Phaser.Scene {
         let isMoving = false;
         for (var i = 0; i < this.letters.length; i++) {
             let letterBody = this.letters[i].body as Phaser.Physics.Arcade.Body;
-            // console.log(letterBody.acceleration.y);
             if (!letterBody.onFloor()) {
                 isMoving = true;
             }
@@ -261,8 +260,12 @@ export default class MainMenuScene extends Phaser.Scene {
                 }
             }
         }
-        if (!isMoving) {
-            this.startText();
+        if (!isMoving && !this.changeText) {
+            this.changeText = true;
+            this.time.delayedCall(3000, () => {
+                this.startText();
+                this.changeText = false;
+            });
         }
 
         if (this.install && runningStandalone()) {
