@@ -24,7 +24,7 @@
 
         <title><%= htmlWebpackPlugin.options.gameName %></title>
 
-        <link href="https://fonts.googleapis.com/css2?family=Syne+Mono&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
 
         <style>
             html,
@@ -84,7 +84,7 @@
                 left: 0;
             }
             .fontPreload {
-                font-family: 'Syne Mono';
+                font-family: 'VT323';
             }
         </style>
 
@@ -101,80 +101,15 @@
 
             function runningStandalone() {
                 if (window.matchMedia('(display-mode: standalone)').matches) {
-                    // console.log('[PWA] app is running as standalone');
                     return true;
                 }
-                // console.log('[PWA] app is running in browser');
                 return false;
             }
 
-            // console.log('InstalledRelatedApps:');
-            // console.log(navigator.getInstalledRelatedApps());
-            // navigator
-            //     .getInstalledRelatedApps()
-            //     .then((value) => {
-            //         console.log('InstalledRelatedApps' + value);
-            //         console.log(value);
-            //     })
-            //     .catch((err) => {
-            //         console.log('InstalledRelatedApps' + err);
-            //     });
-
-            // const relatedApps = navigator.getInstalledRelatedApps();
-            // relatedApps.then((val) => {
-            //     console.log('related apps: ' + val.length);
-            //     val.forEach((app) => {
-            //         console.log(app.id, app.platform, app.url);
-            //     });
-            // });
-
-            console.log('URL: ' + document.referrer);
             if ('serviceWorker' in navigator) {
-                console.log('.... register load event');
                 window.addEventListener('load', () => {
                     navigator.serviceWorker.register('./sw.js').then((reg) => {});
                 });
-            }
-
-            //DEPRECATED
-            // var appInstalled = false;
-            // window.addEventListener('appinstalled', () => {
-            //     console.log('~~~ PWA was installed');
-            //     appInstalled = true;
-            // });
-            //DEPRECATED
-
-            var supportsOrientationChange = 'onorientationchange' in window,
-                orientationEvent = supportsOrientationChange ? 'orientationchange' : 'resize';
-
-            window.addEventListener(
-                orientationEvent,
-                function () {
-                    console.log('the orientation has changed');
-                },
-                false
-            );
-
-            window.matchMedia('(orientation: portrait)').addListener(function (m) {
-                if (m.matches) {
-                    logOrienation();
-                } else {
-                    logOrienation();
-                }
-            });
-
-            window.addEventListener('resize', logOrienation, false);
-            screen.orientation.addEventListener('change', logOrienation);
-
-            function logOrienation() {
-                screenOrientation = window.innerHeight > window.innerWidth ? 90 : 0;
-                if (screenOrientation) {
-                    console.log('| Orietation: portrait');
-                } else {
-                    console.log('| Orietation: landscape');
-                }
-                console.log('| Pixel ratio: ' + window.devicePixelRatio);
-                console.log('| Pixel height x width: ' + window.screen.availHeight + ' x ' + window.screen.availWidth);
             }
         </script>
     </head>

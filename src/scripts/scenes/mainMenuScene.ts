@@ -21,8 +21,9 @@ export default class MainMenuScene extends Phaser.Scene {
     buttonsX = 400;
 
     screenCenterX: number;
+    rect: Phaser.GameObjects.Rectangle;
 
-    letterDistance: number = 23;
+    letterDistance: number = 21;
     gravity: number = 4300;
     letters: Array<Phaser.GameObjects.Text> = [];
     letterYDistance: number = 2;
@@ -55,6 +56,18 @@ export default class MainMenuScene extends Phaser.Scene {
             startLetters(): Array<number> {
                 return [this.text.length / 4, (this.text.length / 4) * 3];
             }
+        },
+        {
+            text: 'CoderDojo -The community of 2379 free, open and local programming clubs for young people',
+            startLetters(): Array<number> {
+                let fallLetters: Array<number> = [];
+                for (let a = 0; a < this.text.length; a++) {
+                    if (a % 4 == 0) {
+                        fallLetters.push(a);
+                    }
+                }
+                return fallLetters;
+            }
         }
     ];
 
@@ -77,23 +90,23 @@ export default class MainMenuScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image('play', 'assets/buttons/play.png');
-        this.load.image('play-focus', 'assets/buttons/play-focus.png');
+        this.load.image('play', 'assets/mainMenu/buttons/play.png');
+        this.load.image('play-focus', 'assets/mainMenu/buttons/play-focus.png');
 
-        this.load.image('install', 'assets/buttons/install.png');
-        this.load.image('install-focus', 'assets/buttons/install-focus.png');
-        this.load.image('launch', 'assets/buttons/launch.png');
-        this.load.image('launch-focus', 'assets/buttons/launch-focus.png');
+        this.load.image('install', 'assets/mainMenu/buttons/install.png');
+        this.load.image('install-focus', 'assets/mainMenu/buttons/install-focus.png');
+        this.load.image('launch', 'assets/mainMenu/buttons/launch.png');
+        this.load.image('launch-focus', 'assets/mainMenu/buttons/launch-focus.png');
 
-        this.load.image('character', 'assets/buttons/character.png');
-        this.load.image('character-focus', 'assets/buttons/character-focus.png');
-        this.load.image('options', 'assets/buttons/options.png');
-        this.load.image('options-focus', 'assets/buttons/options-focus.png');
-        this.load.image('credits', 'assets/buttons/credits.png');
-        this.load.image('credits-focus', 'assets/buttons/credits-focus.png');
+        this.load.image('character', 'assets/mainMenu/buttons/character.png');
+        this.load.image('character-focus', 'assets/mainMenu/buttons/character-focus.png');
+        this.load.image('options', 'assets/mainMenu/buttons/options.png');
+        this.load.image('options-focus', 'assets/mainMenu/buttons/options-focus.png');
+        this.load.image('credits', 'assets/mainMenu/buttons/credits.png');
+        this.load.image('credits-focus', 'assets/mainMenu/buttons/credits-focus.png');
 
-        this.load.image('bg', 'assets/background.jpg');
-        this.load.image('title', 'assets/title-bg.png');
+        this.load.image('bg', 'assets/mainMenu/background.jpg');
+        this.load.image('title', 'assets/mainMenu/title-bg.png');
     }
 
     create() {
@@ -108,7 +121,6 @@ export default class MainMenuScene extends Phaser.Scene {
                 let image = this.add.image(w, h, 'bg');
                 image.setOrigin(0, 0);
                 h = h + 400;
-                console.log('h: ' + h);
             }
             h = 0;
             w = w + 400;
@@ -119,6 +131,14 @@ export default class MainMenuScene extends Phaser.Scene {
         title.setOrigin(0.5, 0);
 
         this.setInnteractiveButtons();
+
+        // this.rect = this.add.rectangle(0, 1070, 1920, 1, 0x008080);
+        // this.physics.add.existing(this.rect);
+        // this.rect.setOrigin(0, 1);
+        // (this.rect.body as Phaser.Physics.Arcade.Body).setImmovable(true);
+
+        // let rect2 = this.add.rectangle(0 + 20, 10, 1920 - 40, 2, 0x1c0000);
+        // rect2.setOrigin(0, 1);
 
         this.startText();
 
@@ -154,24 +174,26 @@ export default class MainMenuScene extends Phaser.Scene {
 
     printText(text: string) {
         for (var i = 0; i < text.length; i++) {
-            let letterX: number = this.screenCenterX + (text.length * this.letterDistance) / 2 + i * this.letterDistance - text.length * this.letterDistance;
+            let letterX: number = this.screenCenterX + this.letterDistance * (i - text.length / 2);
             this.printLetter(text.charAt(i), letterX);
         }
     }
 
     printLetter(letter: string, letterX: number) {
-        let text = this.add.text(0, 770, letter);
+        let text = this.add.text(0, 760, letter);
         this.letters.push(text);
         text.setX(letterX);
         text.setColor('#' + this.colors[Math.floor(Math.random() * this.colors.length)]);
-        text.setFontSize(36);
+        text.setFontSize(44);
         text.setStroke('#000000', 4);
-        text.setFontFamily('"Syne Mono"');
-        text.setFontStyle('bold');
+        text.setFontFamily('"VT323"');
+        // text.setFontStyle('bold');
         text.setOrigin(0, 1);
 
         this.physics.world.setBoundsCollision(true, true, true, true);
         this.physics.add.existing(text);
+        // this.physics.add.collider(this.rect, text);
+
         (text.body as Phaser.Physics.Arcade.Body).setGravityY(0);
         (text.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(true);
         (text.body as Phaser.Physics.Arcade.Body).setBounceY(this.bounceY);
@@ -207,6 +229,7 @@ export default class MainMenuScene extends Phaser.Scene {
         });
         this.character.on(Phaser.Input.Events.POINTER_UP, () => {
             this.character.setTexture('character-focus');
+            this.scene.start('Level1');
         });
 
         this.options = this.add.sprite(this.buttonsX, this.firstButtonY + this.buttonDistance * 2, 'options').setInteractive();
