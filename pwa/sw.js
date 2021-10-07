@@ -47,7 +47,20 @@ self.addEventListener('install', (evt) => {
 });
 
 self.addEventListener('activate', (evt) => {
-    console.log('activate...');
+    // console.log('activate...');
+    evt.waitUntil(
+        caches.keys().then(function (cacheNames) {
+            return Promise.all(
+                cacheNames
+                    .filter(function (cacheName) {
+                        return true;
+                    })
+                    .map(function (cacheName) {
+                        return caches.delete(cacheName);
+                    })
+            );
+        })
+    );
 });
 
 self.addEventListener('fetch', (evt) => {
