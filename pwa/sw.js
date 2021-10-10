@@ -15,7 +15,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 self.addEventListener('install', (evt) => {
     console.log('PWA install...');
     //skip cache
-    // evt.skipWaiting();
+    evt.skipWaiting();
     return;
 
     evt.waitUntil(
@@ -47,26 +47,31 @@ self.addEventListener('install', (evt) => {
 });
 
 self.addEventListener('activate', (evt) => {
-    // console.log('activate...');
-    evt.waitUntil(
-        caches.keys().then(function (cacheNames) {
-            return Promise.all(
-                cacheNames
-                    .filter(function (cacheName) {
-                        return true;
-                    })
-                    .map(function (cacheName) {
-                        return caches.delete(cacheName);
-                    })
-            );
-        })
-    );
+    // evt.waitUntil(
+    //     caches.keys().then(function (cacheNames) {
+    //         return Promise.all(
+    //             cacheNames
+    //                 .filter(function (cacheName) {
+    //                     return true;
+    //                 })
+    //                 .map(function (cacheName) {
+    //                     return caches.delete(cacheName);
+    //                 })
+    //         );
+    //     })
+    // );
 });
 
 self.addEventListener('fetch', (evt) => {
-    console.log('fetch...');
-    console.log('evt.respondWidth: ' + evt.respondWidth);
-    console.log(evt);
+    console.log(' fetch...');
+    console.log('activate...');
+    self.caches.delete('workbox-precache-v2-http://localhost:8000/');
+
+    // self.caches.keys().then((keys) => {
+    //     keys.forEach((key) => console.log('------' + key));
+    // });
+    return fetch(evt.request);
+
     if (evt.respondWidth) {
         evt.respondWidth(
             caches.match(evt.request).then((res) => {

@@ -25,7 +25,7 @@
         <title><%= htmlWebpackPlugin.options.gameName %></title>
 
         <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet" />
-
+        <link href="https://fonts.googleapis.com/css2?family=Lobster&display=swap" rel="stylesheet" />
         <style>
             html,
             #phaser-game {
@@ -83,8 +83,11 @@
                 top: 0;
                 left: 0;
             }
-            .fontPreload {
+            .vt323FontPreload {
                 font-family: 'VT323';
+            }
+            .lobsterFontPreload {
+                font-family: 'Lobster';
             }
         </style>
 
@@ -114,7 +117,8 @@
         </script>
     </head>
     <body id="htmlBody">
-        <h1 class="fontPreload" style="position: absolute; top: -500px; right: -500">Font Preload</h1>
+        <h1 class="vt323FontPreload" style="position: absolute; top: -500px; right: -500">Font Preload</h1>
+        <h1 class="lobsterFontPreload" style="position: absolute; top: -500px; right: -500">Font Preload</h1>
         <div id="loading-screen">
             <h2 id="item">loading...</h2>
         </div>

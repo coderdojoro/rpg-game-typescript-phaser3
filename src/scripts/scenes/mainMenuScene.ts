@@ -76,6 +76,7 @@ export default class MainMenuScene extends Phaser.Scene {
 
     constructor() {
         super({ key: 'MainMenuScene' });
+        console.log('[][][][][][][][]][][][][][][][][][][][][][][][] reload 16');
         // var mediaQueryList = window.matchMedia('(orientation: portrait)');
 
         // mediaQueryList.addEventListener('change', (m) => {
