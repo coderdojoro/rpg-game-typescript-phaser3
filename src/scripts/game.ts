@@ -1,7 +1,7 @@
 import 'phaser';
-import DorothysHouse from './scenes/dorothysHouse';
+import DorothysHouseScene from './scenes/dorothysHouseScene';
 import GameScene from './scenes/gameScene';
-import Level1 from './scenes/level1';
+import VillageScene from './scenes/villageScene';
 import MainMenuScene from './scenes/mainMenuScene';
 
 const DEFAULT_WIDTH = 1920;
@@ -25,7 +25,7 @@ export const phaserConfiguration = {
         antialiasGL: false,
         pixelArt: true
     },
-    scene: [/*DorothysHouse*/ MainMenuScene, GameScene, Level1, DorothysHouse],
+    scene: [MainMenuScene, GameScene, VillageScene, DorothysHouseScene],
     physics: {
         default: 'arcade',
         arcade: {

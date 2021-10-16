@@ -1,7 +1,7 @@
-import * as configs from './../game';
-import { ToolbarItem } from './toolbarItem';
+import * as configs from '../game';
+import { ToolbarItem } from '../objects/toolbarItem';
 
-export default class Level1 extends Phaser.Scene {
+export default class DorothysHouseScene extends Phaser.Scene {
     cursors;
     hero;
 
@@ -14,32 +14,48 @@ export default class Level1 extends Phaser.Scene {
     spaceKey: Phaser.Input.Keyboard.Key;
 
     constructor() {
-        super({ key: 'Level1' });
+        super({ key: 'DorothysHouseScene' });
     }
 
     preload() {
-        this.load.image('tiles', 'assets/tilesets/ground-tileset.png');
+        this.load.image('interiorTiles', 'assets/tilesets/interior-tileset.png');
         this.load.image('toolbar', 'assets/toolbar.png');
         this.load.spritesheet('life-spritesheet', 'assets/life.png', { frameWidth: 47, frameHeight: 42 });
 
         this.load.spritesheet('objects-tileset-spritesheet', 'assets/tilesets/objects-tileset.png', { frameWidth: 32, frameHeight: 32 });
 
-        this.load.tilemapTiledJSON('map', 'assets/tilemaps/town.json');
+        this.load.tilemapTiledJSON('dorothysHouseMap', 'assets/tilemaps/dorothysHouse.json');
         this.load.atlas('atlas', 'assets/atlas/atlas.png', 'assets/atlas/atlas.json');
     }
 
     create() {
-        const map: Phaser.Tilemaps.Tilemap = this.make.tilemap({ key: 'map' });
+        // //TODO: temporary the first scene:
+        // // remove the loading screen
+        // let loadingScreen = document.getElementById('loading-screen');
+        // if (loadingScreen) {
+        //     loadingScreen.classList.add('transparent');
+        //     this.time.addEvent({
+        //         delay: 1000,
+        //         callback: () => {
+        //             // @ts-ignore
+        //             loadingScreen.remove();
+        //         }
+        //     });
+        // }
+        this.cameras.main.fadeIn();
+
+        const map: Phaser.Tilemaps.Tilemap = this.make.tilemap({ key: 'dorothysHouseMap' });
 
         // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
         // Phaser's cache (i.e. the name you used in preload)
-        const tileset = map.addTilesetImage('ground', 'tiles', 32, 32, 1, 2);
+        const tileset = map.addTilesetImage('ground', 'interiorTiles', 16, 16, 0, 0);
         const objectsTileset = map.addTilesetImage('objects', 'objects-tileset-spritesheet', 32, 32, 0, 0);
 
         // Parameters: layer name (or index) from Tiled, tileset, x, y
         const belowLayer = map.createLayer('Below hero', tileset, 0, 0);
         const objectsBelowLayer = map.createLayer('Objects below hero', tileset, 0, 0);
         const worldLayer = map.createLayer('World', tileset, 0, 0);
+        const aboveWorldLayer = map.createLayer('Objects above world', tileset, 0, 0);
         const aboveLayer = map.createLayer('Above hero', tileset, 0, 0);
 
         // worldLayer.setCollisionByProperty({ collides: true });
@@ -66,34 +82,6 @@ export default class Level1 extends Phaser.Scene {
         this.physics.add.collider(this.hero, worldLayer);
 
         this.physics.world.setBoundsCollision(true, true, true, true);
-
-        const dorothyDoor = map.findObject('Objects', (obj) => obj.name === "Dorothy's House");
-        let dorothyDoorTile: Phaser.Tilemaps.Tile = worldLayer.getTileAtWorldXY(dorothyDoor.x!, dorothyDoor.y!);
-        worldLayer.setTileLocationCallback(
-            dorothyDoorTile.x - 1,
-            dorothyDoorTile.y,
-            2,
-            1,
-            (hero, tile) => {
-                if (this.popupGraphics) {
-                    return;
-                }
-                let found = this.toolbarItems.find((element) => element.name === 'key');
-                if (found) {
-                    this.scene.sleep(this);
-                    this.scene.launch('DorothysHouse');
-                } else {
-                    this.popupMessage(
-                        'Dorothy și-a pierdut cheia și nu poate intra în casă. Poți să o ajuți să își găsească cheia?',
-                        dorothyDoorTile.pixelX,
-                        dorothyDoorTile.pixelY,
-                        300,
-                        150
-                    );
-                }
-            },
-            this
-        );
 
         let animObjects: Phaser.Types.Tilemaps.TiledObject[] = map.filterObjects('Objects', (obj: any) => {
             let tileInTileset: any = objectsTileset.getTileProperties(obj.gid);

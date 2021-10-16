@@ -1,7 +1,18 @@
 import * as configs from '../game';
-import { ToolbarItem } from './toolbarItem';
+import { ToolbarItem } from '../objects/toolbarItem';
+import Dog from '../sprites/dog';
 
-export default class DorothysHouse extends Phaser.Scene {
+class Node {
+    x: number;
+    y: number;
+
+    constructor(x: number, y: number) {
+        this.x = x;
+        this.y = y;
+    }
+}
+
+export default class VillageScene extends Phaser.Scene {
     cursors;
     hero;
 
@@ -13,49 +24,39 @@ export default class DorothysHouse extends Phaser.Scene {
     popupText?: Phaser.GameObjects.Text;
     spaceKey: Phaser.Input.Keyboard.Key;
 
+    map: Phaser.Tilemaps.Tilemap;
+    pathsMatrix: number[][];
+
     constructor() {
-        super({ key: 'DorothysHouse' });
+        super({ key: 'VillageScene' });
     }
 
     preload() {
-        this.load.image('interiorTiles', 'assets/tilesets/interior-tileset.png');
+        this.load.image('tiles', 'assets/tilesets/ground-tileset.png');
         this.load.image('toolbar', 'assets/toolbar.png');
         this.load.spritesheet('life-spritesheet', 'assets/life.png', { frameWidth: 47, frameHeight: 42 });
 
         this.load.spritesheet('objects-tileset-spritesheet', 'assets/tilesets/objects-tileset.png', { frameWidth: 32, frameHeight: 32 });
 
-        this.load.tilemapTiledJSON('dorothysHouseMap', 'assets/tilemaps/dorothysHouse.json');
+        this.load.tilemapTiledJSON('map', 'assets/tilemaps/town.json');
         this.load.atlas('atlas', 'assets/atlas/atlas.png', 'assets/atlas/atlas.json');
     }
 
     create() {
-        //TODO: temporary the first scene:
-        // remove the loading screen
-        let loadingScreen = document.getElementById('loading-screen');
-        if (loadingScreen) {
-            loadingScreen.classList.add('transparent');
-            this.time.addEvent({
-                delay: 1000,
-                callback: () => {
-                    // @ts-ignore
-                    loadingScreen.remove();
-                }
-            });
-        }
+        this.cameras.main.fadeIn();
 
-        const map: Phaser.Tilemaps.Tilemap = this.make.tilemap({ key: 'dorothysHouseMap' });
+        this.map = this.make.tilemap({ key: 'map' });
 
         // Parameters are the name you gave the tileset in Tiled and then the key of the tileset image in
         // Phaser's cache (i.e. the name you used in preload)
-        const tileset = map.addTilesetImage('ground', 'interiorTiles', 16, 16, 0, 0);
-        const objectsTileset = map.addTilesetImage('objects', 'objects-tileset-spritesheet', 32, 32, 0, 0);
+        const tileset = this.map.addTilesetImage('ground', 'tiles', 32, 32, 1, 2);
+        const objectsTileset = this.map.addTilesetImage('objects', 'objects-tileset-spritesheet', 32, 32, 0, 0);
 
         // Parameters: layer name (or index) from Tiled, tileset, x, y
-        const belowLayer = map.createLayer('Below hero', tileset, 0, 0);
-        const objectsBelowLayer = map.createLayer('Objects below hero', tileset, 0, 0);
-        const worldLayer = map.createLayer('World', tileset, 0, 0);
-        const aboveWorldLayer = map.createLayer('Objects above world', tileset, 0, 0);
-        const aboveLayer = map.createLayer('Above hero', tileset, 0, 0);
+        const belowLayer = this.map.createLayer('Below hero', tileset, 0, 0);
+        const objectsBelowLayer = this.map.createLayer('Objects below hero', tileset, 0, 0);
+        const worldLayer = this.map.createLayer('World', tileset, 0, 0);
+        const aboveLayer = this.map.createLayer('Above hero', tileset, 0, 0);
 
         // worldLayer.setCollisionByProperty({ collides: true });
         worldLayer.setCollisionBetween(tileset.firstgid, tileset.firstgid + tileset.total, true);
@@ -67,7 +68,7 @@ export default class DorothysHouse extends Phaser.Scene {
 
         // Object layers in Tiled let you embed extra info into a map - like a spawn point or custom
         // collision shapes. In the tmx file, there's an object layer with a point named "Spawn Point"
-        const spawnPoint = map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
+        const spawnPoint = this.map.findObject('Objects', (obj) => obj.name === 'Spawn Point');
 
         // Create a sprite with physics enabled via the physics system. The image used for the sprite has
         // a bit of whitespace, so I'm using setSize & setOffset to control the size of the this.hero's body.
@@ -82,7 +83,36 @@ export default class DorothysHouse extends Phaser.Scene {
 
         this.physics.world.setBoundsCollision(true, true, true, true);
 
-        let animObjects: Phaser.Types.Tilemaps.TiledObject[] = map.filterObjects('Objects', (obj: any) => {
+        const dorothyDoor = this.map.findObject('Objects', (obj) => obj.name === "Dorothy's House");
+        let dorothyDoorTile: Phaser.Tilemaps.Tile = worldLayer.getTileAtWorldXY(dorothyDoor.x!, dorothyDoor.y!);
+        worldLayer.setTileLocationCallback(
+            dorothyDoorTile.x - 1,
+            dorothyDoorTile.y,
+            2,
+            1,
+            (hero, tile) => {
+                if (this.popupGraphics) {
+                    return;
+                }
+                let found = this.toolbarItems.find((element) => element.name === 'key');
+                if (found) {
+                    this.scene.sleep(this);
+                    this.scene.launch('DorothysHouseScene');
+                    this.cameras.main.fadeOut(1000, 0, 0, 0);
+                } else {
+                    this.popupMessage(
+                        'Dorothy și-a pierdut cheia și nu poate intra în casă. Poți să o ajuți să își găsească cheia?',
+                        dorothyDoorTile.pixelX,
+                        dorothyDoorTile.pixelY,
+                        300,
+                        150
+                    );
+                }
+            },
+            this
+        );
+
+        let animObjects: Phaser.Types.Tilemaps.TiledObject[] = this.map.filterObjects('Objects', (obj: any) => {
             let tileInTileset: any = objectsTileset.getTileProperties(obj.gid);
             if (tileInTileset && tileInTileset.animated === true) {
                 return true;
@@ -189,8 +219,8 @@ export default class DorothysHouse extends Phaser.Scene {
 
         const camera = this.cameras.main;
         camera.startFollow(this.hero);
-        camera.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
-        this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
+        camera.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
+        this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels);
         (this.hero.body as Phaser.Physics.Arcade.Body).setCollideWorldBounds(true);
 
         this.toolbar = this.add.image(this.cameras.main.worldView.x + this.cameras.main.width / 2, this.cameras.main.worldView.y + 1080, 'toolbar');
@@ -205,6 +235,155 @@ export default class DorothysHouse extends Phaser.Scene {
         this.life.setDepth(110);
 
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        let dog: Phaser.Types.Tilemaps.TiledObject = this.map.findObject('Objects', (obj) => obj.name === 'Dog');
+
+        let dogSprite = new Dog(dog.x!, dog.y!, this);
+
+        let dogTile: Phaser.Math.Vector2 = this.map.worldToTileXY(dog.x!, dog.y!);
+        let heroTile: Phaser.Math.Vector2 = this.map.worldToTileXY(spawnPoint.x!, spawnPoint.y!);
+
+        // map.forEachTile((t: Phaser.Tilemaps.Tile) => {
+        //     let tile = t as Phaser.Tilemaps.Tile & PathNode;
+        //     console.log(tile.x + ', ' + tile.y);
+        //     tile.cost = -1;
+        // });
+
+        // let tile = map.getTileAt(1, 1) as Phaser.Tilemaps.Tile & PathNode;
+        // console.log(tile.x + ', ' + tile.y);
+
+        // this.pathsMatrix = new Array(this.map.width).fill(new Array(this.map.height).fill(-1));
+
+        this.pathsMatrix = new Array<Array<number>>();
+        for (let x = 0; x < this.map.width; x++) {
+            this.pathsMatrix[x] = new Array<number>();
+            for (let y = 0; y < this.map.height; y++) {
+                this.pathsMatrix[x][y] = -1;
+            }
+        }
+
+        this.pathsMatrix[dogTile.x][dogTile.y] = 0;
+        this.pathsMatrix[heroTile.x][heroTile.y] = -2;
+
+        this.findCosts();
+        let path = this.findPath(heroTile.x, heroTile.y);
+        for (let node of path) {
+            let coord = this.map.tileToWorldXY(node.x, node.y);
+            let style: Phaser.Types.GameObjects.Text.TextStyle = {
+                fontSize: '16px',
+                fontStyle: 'normal',
+                strokeThickness: 0,
+                fontFamily: 'Lobster',
+                align: 'left'
+            };
+            let text = this.add.text(coord.x + 16, coord.y + 16, '*', style);
+        }
+    }
+
+    private findPath(heroX: number, heroY: number): Array<Node> {
+        let lastX = heroX;
+        let lastY = heroY;
+        let cost = this.pathsMatrix[lastX][lastY];
+        let path: Array<Node> = [];
+        path.push(new Node(lastX, lastY));
+        while (cost > 0) {
+            cost--;
+            let neighbors = this.getNeighbors(lastX, lastY);
+            // console.log('find: ' + cost);
+            for (let neighbor of neighbors) {
+                // console.log(this.pathsMatrix[neighbor[0]][neighbor[1]]);
+                if (this.pathsMatrix[neighbor.x][neighbor.y] == cost) {
+                    lastX = neighbor.x;
+                    lastY = neighbor.y;
+                    path.push(new Node(lastX, lastY));
+                    break;
+                }
+            }
+        }
+        return path.reverse();
+    }
+
+    private findCosts() {
+        // let style: Phaser.Types.GameObjects.Text.TextStyle = {
+        //     fontSize: '16px',
+        //     fontStyle: 'normal',
+        //     strokeThickness: 0,
+        //     fontFamily: 'Lobster',
+        //     align: 'left'
+        // };
+
+        let finished = false;
+        let currentCost = 0;
+        while (!finished) {
+            finished = true;
+            // console.log('loop');
+            for (let x = 0; x < this.map.width; x++) {
+                for (let y = 0; y < this.map.height; y++) {
+                    if (this.pathsMatrix[x][y] == currentCost) {
+                        finished = false;
+                        let neighbors = this.getEmptyNeighbors(x, y);
+                        for (let neighbor of neighbors) {
+                            if (this.pathsMatrix[neighbor.x][neighbor.y] == -2) {
+                                this.pathsMatrix[neighbor.x][neighbor.y] = currentCost + 1;
+                                // let coord = this.map.tileToWorldXY(neighbor[0], neighbor[1]);
+                                // let text = this.add.text(coord.x + 16, coord.y + 16, '[' + (currentCost + 1) + ']', style);
+                                return;
+                            }
+                            this.pathsMatrix[neighbor.x][neighbor.y] = currentCost + 1;
+                            // let coord = this.map.tileToWorldXY(neighbor[0], neighbor[1]);
+                            // let text = this.add.text(coord.x + 16, coord.y + 16, '' + (currentCost + 1), style);
+                        }
+                    }
+                }
+            }
+            currentCost++;
+        }
+    }
+
+    getNeighbors(x: number, y: number): Array<Node> {
+        let result = new Array();
+        let anglePaths = new Array();
+        if (y > 0) {
+            if (x > 0) {
+                anglePaths.push(new Node(x - 1, y - 1));
+            }
+            result.push(new Node(x, y - 1));
+            if (x < this.map.width) {
+                anglePaths.push(new Node(x + 1, y - 1));
+            }
+        }
+        if (x > 0) {
+            result.push(new Node(x - 1, y));
+        }
+        if (x < this.map.width) {
+            result.push(new Node(x + 1, y));
+        }
+        if (y < this.map.height) {
+            if (x > 0) {
+                anglePaths.push(new Node(x - 1, y + 1));
+            }
+            result.push(new Node(x, y + 1));
+            if (x < this.map.width) {
+                anglePaths.push(new Node(x + 1, y + 1));
+            }
+        }
+        result.push(...anglePaths);
+        return result;
+    }
+
+    getEmptyNeighbors(x: number, y: number): Array<Node> {
+        // console.log('found: ' + x + ', ' + y);
+        let neighbors: Array<Node> = this.getNeighbors(x, y);
+        let emptyNeighbors: Array<Node> = [];
+        for (let a = 0; a < neighbors.length; a++) {
+            let neighbor = neighbors[a];
+            // console.log('N: ' + neighbor[0] + ', ' + neighbor[1]);
+            if (this.pathsMatrix[neighbor.x][neighbor.y] < 0 && !this.map.getTileAt(neighbor.x, neighbor.y, false, 'World')) {
+                // console.log('remove');
+                emptyNeighbors.push(neighbor);
+            }
+        }
+        return emptyNeighbors;
     }
 
     popupMessage(text: string, x: number, y: number, w: number, h: number) {
