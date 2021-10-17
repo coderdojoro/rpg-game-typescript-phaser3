@@ -66,6 +66,7 @@ export default class VillageScene extends Phaser.Scene {
             .setSize(30, 40)
             .setOffset(0, 24);
         this.hero.setDepth(9);
+        this.hero.setOrigin(0.5, 0.5);
 
         // Watch the this.hero and worldLayer for collisions, for the duration of the scene:
         this.physics.add.collider(this.hero, worldLayer);
