@@ -3,8 +3,15 @@ import { ToolbarItem } from '../objects/toolbarItem';
 import Dog from '../sprites/dog';
 
 export default class VillageScene extends Phaser.Scene {
-    cursors;
+    keyLeft: Phaser.Input.Keyboard.Key;
+    keyRight: Phaser.Input.Keyboard.Key;
+    keyUp: Phaser.Input.Keyboard.Key;
+    keyDown: Phaser.Input.Keyboard.Key;
+    keyFire: Phaser.Input.Keyboard.Key;
+
     hero: Phaser.Types.Physics.Arcade.SpriteWithDynamicBody;
+
+    heroState = 'idle';
 
     toolbarItems: Array<ToolbarItem> = [];
     toolbar: Phaser.GameObjects.Image;
@@ -28,7 +35,16 @@ export default class VillageScene extends Phaser.Scene {
         this.load.spritesheet('objects-tileset-spritesheet', 'assets/tilesets/objects-tileset.png', { frameWidth: 32, frameHeight: 32 });
 
         this.load.tilemapTiledJSON('map', 'assets/tilemaps/town.json');
-        this.load.atlas('atlas', 'assets/atlas/atlas.png', 'assets/atlas/atlas.json');
+
+        this.load.spritesheet('hero-idle-aggro-E-spritesheet', 'assets/hero/idle_aggro_E.png', { frameWidth: 128, frameHeight: 128 });
+        this.load.spritesheet('hero-idle-aggro-N-spritesheet', 'assets/hero/idle_aggro_N.png', { frameWidth: 128, frameHeight: 128 });
+        this.load.spritesheet('hero-idle-aggro-S-spritesheet', 'assets/hero/idle_aggro_S.png', { frameWidth: 128, frameHeight: 128 });
+        this.load.spritesheet('hero-walk-aggro-E-spritesheet', 'assets/hero/walk_aggro_E.png', { frameWidth: 128, frameHeight: 128 });
+        this.load.spritesheet('hero-walk-aggro-N-spritesheet', 'assets/hero/walk_aggro_N.png', { frameWidth: 128, frameHeight: 128 });
+        this.load.spritesheet('hero-walk-aggro-S-spritesheet', 'assets/hero/walk_aggro_S.png', { frameWidth: 128, frameHeight: 128 });
+        this.load.spritesheet('hero-atk-heavy-E-spritesheet', 'assets/hero/atk_heavy_E.png', { frameWidth: 128, frameHeight: 128 });
+        this.load.spritesheet('hero-atk-heavy-N-spritesheet', 'assets/hero/atk_heavy_N.png', { frameWidth: 128, frameHeight: 128 });
+        this.load.spritesheet('hero-atk-heavy-S-spritesheet', 'assets/hero/atk_heavy_S.png', { frameWidth: 128, frameHeight: 128 });
     }
 
     create() {
@@ -61,10 +77,11 @@ export default class VillageScene extends Phaser.Scene {
 
         // Create a sprite with physics enabled via the physics system. The image used for the sprite has
         // a bit of whitespace, so I'm using setSize & setOffset to control the size of the this.hero's body.
-        this.hero = this.physics.add
-            .sprite(spawnPoint.x as number, spawnPoint.y as number, 'atlas', 'misa-front')
-            .setSize(30, 40)
-            .setOffset(0, 24);
+        this.hero = this.physics.add.sprite(spawnPoint.x as number, spawnPoint.y as number, 'hero-walk-aggro-S-spritesheet', 0);
+        this.hero.setSize(15, 35);
+        this.hero.setOffset(57, 49);
+        this.hero.setScale(1.4);
+
         this.hero.setDepth(9);
         this.hero.setOrigin(0.5, 0.5);
 
@@ -162,50 +179,71 @@ export default class VillageScene extends Phaser.Scene {
 
         // Create the this.hero's walking animations from the texture atlas. These are stored in the global
         // animation manager so any sprite can access them.
+
         this.anims.create({
-            key: 'misa-left-walk',
-            frames: this.anims.generateFrameNames('atlas', {
-                prefix: 'misa-left-walk.',
-                start: 0,
-                end: 3,
-                zeroPad: 3
-            }),
+            key: 'hero-idle-aggro-E-anim',
+            frames: this.anims.generateFrameNumbers('hero-idle-aggro-E-spritesheet', {}),
             frameRate: 10,
             repeat: -1
         });
+
         this.anims.create({
-            key: 'misa-right-walk',
-            frames: this.anims.generateFrameNames('atlas', {
-                prefix: 'misa-right-walk.',
-                start: 0,
-                end: 3,
-                zeroPad: 3
-            }),
+            key: 'hero-idle-aggro-N-anim',
+            frames: this.anims.generateFrameNumbers('hero-idle-aggro-N-spritesheet', {}),
             frameRate: 10,
             repeat: -1
         });
+
         this.anims.create({
-            key: 'misa-front-walk',
-            frames: this.anims.generateFrameNames('atlas', {
-                prefix: 'misa-front-walk.',
-                start: 0,
-                end: 3,
-                zeroPad: 3
-            }),
+            key: 'hero-idle-aggro-S-anim',
+            frames: this.anims.generateFrameNumbers('hero-idle-aggro-S-spritesheet', {}),
             frameRate: 10,
             repeat: -1
         });
+
         this.anims.create({
-            key: 'misa-back-walk',
-            frames: this.anims.generateFrameNames('atlas', {
-                prefix: 'misa-back-walk.',
-                start: 0,
-                end: 3,
-                zeroPad: 3
-            }),
+            key: 'hero-walk-aggro-E-anim',
+            frames: this.anims.generateFrameNumbers('hero-walk-aggro-E-spritesheet', {}),
             frameRate: 10,
             repeat: -1
         });
+
+        this.anims.create({
+            key: 'hero-walk-aggro-N-anim',
+            frames: this.anims.generateFrameNumbers('hero-walk-aggro-N-spritesheet', {}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'hero-walk-aggro-S-anim',
+            frames: this.anims.generateFrameNumbers('hero-walk-aggro-S-spritesheet', {}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'hero-atk-heavy-E-anim',
+            frames: this.anims.generateFrameNumbers('hero-atk-heavy-E-spritesheet', {}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'hero-atk-heavy-N-anim',
+            frames: this.anims.generateFrameNumbers('hero-atk-heavy-N-spritesheet', {}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.anims.create({
+            key: 'hero-atk-heavy-S-anim',
+            frames: this.anims.generateFrameNumbers('hero-atk-heavy-S-spritesheet', {}),
+            frameRate: 10,
+            repeat: 0
+        });
+
+        this.hero.anims.play('hero-idle-aggro-S-anim');
 
         const camera = this.cameras.main;
         camera.startFollow(this.hero);
@@ -224,7 +262,11 @@ export default class VillageScene extends Phaser.Scene {
         this.life.setOrigin(0, 1);
         this.life.setDepth(110);
 
-        this.cursors = this.input.keyboard.createCursorKeys();
+        this.keyLeft = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
+        this.keyRight = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
+        this.keyUp = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
+        this.keyDown = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
+        this.keyFire = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
         let dog: Phaser.Types.Tilemaps.TiledObject = this.map.findObject('Objects', (obj) => obj.name === 'Dog');
 
@@ -290,40 +332,80 @@ export default class VillageScene extends Phaser.Scene {
         // Stop any previous movement from the last frame
         this.hero.body.setVelocity(0);
 
-        // Horizontal movement
-        if (this.cursors.left.isDown) {
-            this.hero.body.setVelocityX(-speed);
-        } else if (this.cursors.right.isDown) {
-            this.hero.body.setVelocityX(speed);
+        if (
+            this.keyFire.isDown &&
+            (this.heroState == 'walk-E' || this.heroState == 'idle-E' || this.heroState == 'walk-W' || this.heroState == 'idle-W') &&
+            !this.heroState.startsWith('atk-')
+        ) {
+            this.hero.anims.play('hero-atk-heavy-E-anim');
+            this.heroState = 'atk-E';
+            this.hero.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+                this.heroState = 'idle-E';
+                this.hero.anims.play('hero-idle-aggro-E-anim');
+            });
         }
 
-        // Vertical movement
-        if (this.cursors.up.isDown) {
-            this.hero.body.setVelocityY(-speed);
-        } else if (this.cursors.down.isDown) {
-            this.hero.body.setVelocityY(speed);
+        if (this.keyFire.isDown && (this.heroState == 'walk-N' || this.heroState == 'idle-N') && !this.heroState.startsWith('atk-')) {
+            this.hero.anims.play('hero-atk-heavy-N-anim');
+            this.heroState = 'atk-N';
+            this.hero.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+                this.heroState = 'idle-N';
+                this.hero.anims.play('hero-idle-aggro-N-anim');
+            });
         }
 
-        // Normalize and scale the velocity so that this.hero can't move faster along a diagonal
-        this.hero.body.velocity.normalize().scale(speed);
+        if (this.keyFire.isDown && (this.heroState == 'walk-S' || this.heroState == 'idle-S') && !this.heroState.startsWith('atk-')) {
+            this.hero.anims.play('hero-atk-heavy-S-anim');
+            this.heroState = 'atk-S';
+            this.hero.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+                this.heroState = 'idle-S';
+                this.hero.anims.play('hero-idle-aggro-S-anim');
+            });
+        }
+
+        console.log(this.heroState);
+        if (this.heroState.startsWith('atk-')) {
+            return;
+        }
 
         // Update the animation last and give left/right animations precedence over up/down animations
-        if (this.cursors.left.isDown) {
-            this.hero.anims.play('misa-left-walk', true);
-        } else if (this.cursors.right.isDown) {
-            this.hero.anims.play('misa-right-walk', true);
-        } else if (this.cursors.up.isDown) {
-            this.hero.anims.play('misa-back-walk', true);
-        } else if (this.cursors.down.isDown) {
-            this.hero.anims.play('misa-front-walk', true);
+        if (this.keyLeft.isDown) {
+            this.hero.body.setVelocityX(-speed);
+            this.hero.setFlipX(true);
+            this.hero.anims.play('hero-walk-aggro-E-anim', true);
+            this.heroState = 'walk-W';
+        } else if (this.keyRight.isDown) {
+            this.hero.body.setVelocityX(speed);
+            this.hero.setFlipX(false);
+            this.hero.anims.play('hero-walk-aggro-E-anim', true);
+            this.heroState = 'walk-E';
+        } else if (this.keyUp.isDown) {
+            this.hero.body.setVelocityY(-speed);
+            this.hero.anims.play('hero-walk-aggro-N-anim', true);
+            this.heroState = 'walk-N';
+        } else if (this.keyDown.isDown) {
+            this.hero.body.setVelocityY(speed);
+            this.hero.anims.play('hero-walk-aggro-S-anim', true);
+            this.heroState = 'walk-S';
         } else {
-            this.hero.anims.stop();
-
-            // If we were moving, pick and idle frame to use
-            if (prevVelocity.x < 0) this.hero.setTexture('atlas', 'misa-left');
-            else if (prevVelocity.x > 0) this.hero.setTexture('atlas', 'misa-right');
-            else if (prevVelocity.y < 0) this.hero.setTexture('atlas', 'misa-back');
-            else if (prevVelocity.y > 0) this.hero.setTexture('atlas', 'misa-front');
+            if (this.heroState == 'walk-E' || this.heroState == 'walk-W') {
+                this.hero.anims.play('hero-idle-aggro-E-anim', true);
+            } else if (this.heroState == 'walk-N') {
+                this.hero.anims.play('hero-idle-aggro-N-anim', true);
+            } else if (this.heroState == 'walk-S') {
+                this.hero.anims.play('hero-idle-aggro-S-anim', true);
+            }
+            if (this.heroState == 'walk-N') {
+                this.heroState = 'idle-N';
+            } else if (this.heroState == 'walk-S') {
+                this.heroState = 'idle-S';
+            } else if (this.heroState == 'walk-E') {
+                this.heroState = 'idle-E';
+            } else if (this.heroState == 'walk-W') {
+                this.heroState = 'idle-W';
+            }
         }
+        // Normalize and scale the velocity so that this.hero can't move faster along a diagonal
+        this.hero.body.velocity.normalize().scale(speed);
     }
 }

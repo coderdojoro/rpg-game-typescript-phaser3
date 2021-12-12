@@ -73,7 +73,7 @@ export default class DorothysHouseScene extends Phaser.Scene {
         // Create a sprite with physics enabled via the physics system. The image used for the sprite has
         // a bit of whitespace, so I'm using setSize & setOffset to control the size of the this.hero's body.
         this.hero = this.physics.add
-            .sprite(spawnPoint.x as number, spawnPoint.y as number, 'atlas', 'misa-front')
+            .sprite(spawnPoint.x as number, spawnPoint.y as number, 'hero-down')
             .setSize(30, 40)
             .setOffset(0, 24);
         this.hero.setDepth(9);
